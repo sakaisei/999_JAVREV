@@ -2,126 +2,129 @@
 /////////////////////////////////////////////////////////
 // カスタム投稿タイプ
 /////////////////////////////////////////////////////////
-function register_custom_post_types() {
-  // ニュース投稿タイプ
-  $news_labels = array(
-    'name' => 'ニュース',
-    'all_items' => '投稿一覧',
+function register_custom_post_types()
+{
+  // 投稿タイプ一覧
+  $post_types = array(
+    'news' => array(
+      'name' => 'ニュース',
+      'menu_position' => 5,
+      'slug' => 'news'
+    ),
+    'jav' => array(
+      'name' => 'JAV',
+      'menu_position' => 6,
+      'slug' => 'jav'
+    )
   );
-  $news_args = array(
-    'labels' => $news_labels,
-    'public' => true,
-    'menu_position' => 5,
-    'menu_icon' => 'dashicons-admin-post',
-    'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
-    'has_archive' => true,
-    'rewrite' => array('slug' => 'news', 'with_front' => false),
-    'show_in_rest' => true,
-  );
-  register_post_type('news', $news_args);
 
-  // JAV投稿タイプ
-  $jav_labels = array(
-    'name' => 'JAV',
-    'all_items' => '投稿一覧',
-  );
-  $jav_args = array(
-    'labels' => $jav_labels,
-    'public' => true,
-    'menu_position' => 6, // メニュー位置（ニュースの次）
-    'menu_icon' => 'dashicons-admin-post',
-    'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
-    'has_archive' => true,
-    'rewrite' => array('slug' => 'jav', 'with_front' => false),
-    'show_in_rest' => true,
-  );
-  register_post_type('jav', $jav_args);
+  foreach ($post_types as $post_type => $data) {
+    register_post_type($post_type, array(
+      'labels' => array(
+        'name' => $data['name'],
+        'all_items' => '投稿一覧'
+      ),
+      'public' => true,
+      'menu_position' => $data['menu_position'],
+      'menu_icon' => 'dashicons-admin-post',
+      'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
+      'has_archive' => true,
+      'rewrite' => array('slug' => $data['slug'], 'with_front' => false),
+      'show_in_rest' => true,
+    ));
+  }
 
-  // カスタムタクソノミー: format （映像形式）
-  register_taxonomy(
-    'format', // タクソノミースラッグ
-    'jav', // 適用する投稿タイプ
-    array(
+  // タクソノミー一覧（JAV専用）
+  $taxonomies = array(
+    'censor'   => '検閲・規制',
+    'format'   => '映像形式',
+    'playtime' => '再生時間',
+    'cast'     => '出演',
+    'value'    => '価格帯 / 商品性質',
+    'genre'    => '作品ジャンル',
+    'outfit'   => '衣装・コスチューム',
+    'girl'     => '女性のタイプ',
+    'guy'      => '男性のタイプ',
+    'body'     => '体の特徴',
+    'rel'      => '関係性',
+    'scene'    => 'シチュエーション',
+    'play'     => 'プレイ内容'
+  );
+
+  foreach ($taxonomies as $slug => $label) {
+    register_taxonomy($slug, 'jav', array(
       'hierarchical' => true,
-      'label' => '映像形式',
+      'label' => $label,
       'public' => true,
       'show_ui' => true,
       'show_in_rest' => true,
       'has_archive' => true,
-      'rewrite' => array('slug' => 'jav/format', 'with_front' => false),
-    )
-  );
-
-  // カスタムタクソノミー: cast （出演）
-  register_taxonomy(
-    'cast',
-    'jav',
-    array(
-      'hierarchical' => false, // タグ形式
-      'label' => '出演',
-      'public' => true,
-      'show_ui' => true,
-      'show_in_rest' => true,
-      'has_archive' => true,
-      'rewrite' => array('slug' => 'jav/cast', 'with_front' => false),
-    )
-  );
-
-  // カスタムタクソノミー: playtime （再生時間）
-  register_taxonomy(
-    'playtime',
-    'jav',
-    array(
-      'hierarchical' => true,
-      'label' => '再生時間',
-      'public' => true,
-      'show_ui' => true,
-      'show_in_rest' => true,
-      'has_archive' => true,
-      'rewrite' => array('slug' => 'jav/playtime', 'with_front' => false),
-    )
-  );
-
-  // カスタムタクソノミー: value （価格帯 / 商品性質）
-  register_taxonomy(
-    'value',
-    'jav',
-    array(
-      'hierarchical' => true,
-      'label' => '価格帯 / 商品性質',
-      'public' => true,
-      'show_ui' => true,
-      'show_in_rest' => true,
-      'has_archive' => true,
-      'rewrite' => array('slug' => 'jav/value', 'with_front' => false),
-    )
-  );
+      'rewrite' => array('slug' => "jav/$slug", 'with_front' => false),
+    ));
+  }
 }
+
 add_action('init', 'register_custom_post_types');
 
 // カスタムタクソノミーのURLを変更する
 //=====================================================
-function add_custom_rewrite_rules() {
+function add_custom_rewrite_rules()
+{
+  $taxonomies = array(
+    'censor',   // 検閲・規制
+    'format',   // 映像形式
+    'playtime', // 再生時間
+    'cast',     // 出演
+    'value',    // 価格帯 / 商品性質
+    'genre',    // 作品ジャンル
+    'outfit',   // 衣装・コスチューム
+    'girl',     // 女性のタイプ
+    'guy',      // 男性のタイプ
+    'body',     // 体の特徴
+    'rel',      // 関係性
+    'scene',    // シチュエーション
+    'play'      // プレイ内容
+  );
 
-  // タクソノミーのトップページ
-  add_rewrite_rule('jav/format/?$', 'index.php?post_type=jav&taxonomy=format', 'top');
-  add_rewrite_rule('jav/cast/?$', 'index.php?post_type=jav&taxonomy=cast', 'top');
-  add_rewrite_rule('jav/playtime/?$', 'index.php?post_type=jav&taxonomy=playtime', 'top');
-  add_rewrite_rule('jav/value/?$', 'index.php?post_type=jav&taxonomy=value', 'top');
-
-  // タームページ
-  add_rewrite_rule('jav/format/([^/]+)/?$', 'index.php?format=$matches[1]&taxonomy=format', 'top');
-  add_rewrite_rule('jav/format/([^/]+)/page/([^/]+)/?$', 'index.php?format=$matches[1]&taxonomy=format&paged=$matches[2]', 'top');
-
-  add_rewrite_rule('jav/cast/([^/]+)/?$', 'index.php?cast=$matches[1]&taxonomy=cast', 'top');
-  add_rewrite_rule('jav/cast/([^/]+)/page/([^/]+)/?$', 'index.php?cast=$matches[1]&taxonomy=cast&paged=$matches[2]', 'top');
-
-  add_rewrite_rule('jav/playtime/([^/]+)/?$', 'index.php?playtime=$matches[1]&taxonomy=playtime', 'top');
-  add_rewrite_rule('jav/playtime/([^/]+)/page/([^/]+)/?$', 'index.php?playtime=$matches[1]&taxonomy=playtime&paged=$matches[2]', 'top');
-
-  add_rewrite_rule('jav/value/([^/]+)/?$', 'index.php?value=$matches[1]&taxonomy=value', 'top');
-  add_rewrite_rule('jav/value/([^/]+)/page/([^/]+)/?$', 'index.php?value=$matches[1]&taxonomy=value&paged=$matches[2]', 'top');
+  foreach ($taxonomies as $taxonomy) {
+    // タクソノミーのトップページ
+    add_rewrite_rule("jav/$taxonomy/?$", "index.php?post_type=jav&taxonomy=$taxonomy", 'top');
+    // タームページ
+    add_rewrite_rule("jav/$taxonomy/([^/]+)/?$", "index.php?$taxonomy=\$matches[1]&taxonomy=$taxonomy", 'top');
+    // ページネーション
+    add_rewrite_rule("jav/$taxonomy/([^/]+)/page/([^/]+)/?$", "index.php?$taxonomy=\$matches[1]&taxonomy=$taxonomy&paged=\$matches[2]", 'top');
+  }
 }
 add_action('init', 'add_custom_rewrite_rules');
+
+// カスタムタクソノミーのUIを右から記事下に移動
+//=====================================================
+function move_jav_taxonomy_meta_boxes()
+{
+  $taxonomies = array(
+    'censor',
+    'format',
+    'playtime',
+    'cast',
+    'value',
+    'genre',
+    'outfit',
+    'girl',
+    'guy',
+    'body',
+    'rel',
+    'scene',
+    'play'
+  );
+
+  foreach ($taxonomies as $taxonomy) {
+    // 右サイドバーからタクソノミーメタボックスを削除
+    remove_meta_box("{$taxonomy}div", 'jav', 'side');
+
+    // 記事本文の下に再配置
+    add_meta_box("{$taxonomy}div", esc_html(get_taxonomy($taxonomy)->labels->name), 'post_categories_meta_box', 'jav', 'normal', 'high', array('taxonomy' => $taxonomy));
+  }
+}
+add_action('add_meta_boxes', 'move_jav_taxonomy_meta_boxes');
 
 ?>

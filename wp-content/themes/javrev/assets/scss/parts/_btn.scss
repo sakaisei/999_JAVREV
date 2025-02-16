@@ -59,9 +59,9 @@
     transition: 0.3s ease;
     filter: brightness(1) saturate(1);
     cursor: pointer;
-    @include media(pc) {
-      padding: 1em 0.5em;
-    }
+    // @include media(pc) {
+    //   padding: 1em 0.5em;
+    // }
     &:hover {
       opacity: 0.7;
     }
@@ -111,7 +111,7 @@
     max-width: 45.2rem;
   }
   &.max-width--normal {
-    max-width: 54.2rem;
+    max-width: 50rem;
   }
   // レイアウト位置
   &.margin-inline-auto {
@@ -124,6 +124,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      @include media(pc) {
+        padding: 1em 0.5em;
+      }
     }
     .twolinelarge {
       font-size: clamp(34px*0.5, 34/750*100vw, 3.4rem*0.6);
@@ -161,14 +164,16 @@
   }
   // 一回り小さいボタン
   &.small {
-    font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.6);
+    font-size: clamp(22px*0.5, 22/750*100vw, 2.2rem*0.6);
     @include media(pc) {
-      //font-size: min(16/1440*100vw, 1.6rem);
+      font-size: 1.3rem;
     }
     a,
     .btn {
       width: 74%;
       padding: 0.75em 0.5em;
+      font-weight: 400;
+      @include media(pc) {}
     }
   }
 }
@@ -178,11 +183,18 @@
 .btn__tag {
   display: flex;
   flex-wrap: wrap;
-  font-size: clamp(24px*0.5, 20/750*100vw, 2.4rem*0.6);
+  font-size: clamp(26px*0.5, 26/750*100vw, 2.6rem*0.6);
   gap: 4px;
   list-style: none;
   @include media(pc) {
     font-size: clamp(11px, 13/1440*100vw, 1.3rem);
+  }
+  a {
+    transition: 0.2s;
+    // hover
+    &:hover {
+      opacity: 0.7;
+    }
   }
   .tag {
     display: inline-block;
@@ -191,7 +203,6 @@
     background-color: colors(gray-dark);
     border-radius: clamp(10px*0.5, 10/750*100vw, 1rem*0.6);
     text-decoration: none;
-    transition: 0.2s;
     @include media(pc) {
       border-radius: 5px;
     }
@@ -220,10 +231,6 @@
     &.tag-uncensored {
       background-color: colors(pri);
     }
-    // hover
-    &:hover {
-      opacity: 0.7;
-    }
     // 別パターン
     &.media {
       background: none;
@@ -240,16 +247,16 @@
   // 別パターン
   // .large
   &.large {
-    font-size: clamp(28px*0.5, 24/750*100vw, 2.8rem*0.6);
+    font-size: clamp(26px*0.5, 26/750*100vw, 2.6rem*0.6);
     gap: 6px;
     @include media(pc) {
-      font-size: clamp(13px, 16/1440*100vw, 1.6rem);
+      font-size: clamp(13px, 15/1440*100vw, 1.5rem);
     }
   }
   // .small
   &.small {
     font-size: clamp(20px*0.5, 20/750*100vw, 2rem*0.6);
-    gap: 3px;
+    gap: 1px;
     @include media(pc) {
       font-size: clamp(12px, 13/1440*100vw, 1.3rem);
     }
@@ -257,10 +264,66 @@
       padding: 0.4em 0.6em;
     }
   }
+  // .radius-first-last
+  &.radius-first-last {
+    //font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.6);
+    gap: 1px;
+    // @include media(pc) {
+    //   font-size: clamp(12px, 13/1440*100vw, 1.3rem);
+    // }
+    .tag {
+      border-radius: 0;
+      //padding: 0.4em 0.6em;
+      &:first-of-type {
+        border-top-left-radius: clamp(10px*0.5, 10/750*100vw, 1rem*0.6);
+        border-bottom-left-radius: clamp(10px*0.5, 10/750*100vw, 1rem*0.6);
+        @include media(pc) {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+      }
+      &:last-of-type {
+        border-top-right-radius: clamp(10px*0.5, 10/750*100vw, 1rem*0.6);
+        border-bottom-right-radius: clamp(10px*0.5, 10/750*100vw, 1rem*0.6);
+        @include media(pc) {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+      }
+    }
+  }
+  // .radius-first-last-small
+  &.radius-first-last-small {
+    font-size: clamp(20px*0.5, 20/750*100vw, 2rem*0.6);
+    gap: 1px;
+    @include media(pc) {
+      font-size: clamp(12px, 12/1440*100vw, 1.2rem);
+    }
+    .tag {
+      border-radius: 0;
+      padding: 0.4em 0.6em;
+      &:first-of-type {
+        border-top-left-radius: clamp(6px*0.5, 6/750*100vw, 0.6rem*0.6);
+        border-bottom-left-radius: clamp(6px*0.5, 6/750*100vw, 0.6rem*0.6);
+        @include media(pc) {
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+      }
+      &:last-of-type {
+        border-top-right-radius: clamp(6px*0.5, 6/750*100vw, 0.6rem*0.6);
+        border-bottom-right-radius: clamp(6px*0.5, 6/750*100vw, 0.6rem*0.6);
+        @include media(pc) {
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+      }
+    }
+  }
   // .fixedsize--pc
   &.fixedsize--pc {
     @include media(pc) {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
     }
   }
 }
@@ -271,15 +334,20 @@
   font-size: clamp(20px*0.5, 20/750*100vw, 2rem*0.6);
   color: colors(gray-3);
   @include media(pc) {
-    font-size: clamp(12px, 14/1440*100vw, 1.4rem);
+    font-size: clamp(12px, 13/1440*100vw, 1.3rem);
   }
   li {
     display: inline;
-    line-height: 1.75;
+    line-height: 1.65;
     &:after {
       content: ", ";
       display: inline-block;
       margin-right: 0.35em;
+    }
+    &:last-of-type {
+      &:after {
+        content: none;
+      }
     }
     a {
       color: colors(gray);
@@ -287,6 +355,13 @@
       &:hover {
         opacity: 0.7;
       }
+    }
+  }
+  // 別パターン
+  &.large {
+    font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.6);
+    @include media(pc) {
+      font-size: clamp(13px, 15/1440*100vw, 1.5rem);
     }
   }
 }

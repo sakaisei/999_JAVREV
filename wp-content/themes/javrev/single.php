@@ -1,316 +1,304 @@
 <?php get_header(); ?>
 <?php
-  if (function_exists('yoast_breadcrumb')) {
-    yoast_breadcrumb('<nav class="list__breadcrumb margin-top">', '</nav>');
-  }
+// 関数を呼び出してデータを取得
+$affiliate_info = get_affiliate_info();
+?>
+<?php
+if (function_exists('yoast_breadcrumb')) {
+  yoast_breadcrumb('<nav class="list__breadcrumb margin-top">', '</nav>');
+}
 ?>
 <main class="main__common">
   <article class="article__wrap">
     <header class="article__header">
       <div class="ttl__article">
         <div class="inner-layout layout__article">
-
-
-
-        <div>
-
-
-
-
-
-    <?php
-    if (have_posts()) : 
-        while (have_posts()) : 
-            the_post(); 
-    ?>
-            <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                <header class="entry-header">
-                    <h1 class="entry-title"><?php the_title(); ?></h1> <!-- 投稿タイトル -->
-                </header>
-
-                <div class="entry-content">
-                    <?php the_content(); ?> <!-- 投稿本文 -->
-                </div>
-
-                <footer class="entry-footer">
-                    <?php 
-                    // 投稿のメタ情報を表示（例: カテゴリ、タグ）
-                    the_category(', '); 
-                    the_tags('<span class="tag-links">', ', ', '</span>'); 
-                    ?>
-                </footer>
-            </article>
-    <?php 
-        endwhile; 
-    else : 
-    ?>
-        <p><?php esc_html_e('Sorry, no posts matched your criteria.'); ?></p>
-    <?php 
-    endif; 
-    ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-<br><br><br>
-
-<?php
-// if (function_exists('wp_ulike')) {
-//     wp_ulike('get', array(
-//         'id'           => get_the_ID(), // 投稿ID（カスタム投稿タイプにも対応）
-//         'type'         => 'post',      // コンテンツタイプ（例: 'post', 'page'）
-//         'display_dislike' => true,     // 「よくないね」を表示
-//     ));
-// }
-?>
-<?php
-// if (function_exists('wp_ulike_get_count')) {
-//     $like_count = wp_ulike_get_count(get_the_ID(), 'post', 'up');
-//     $dislike_count = wp_ulike_get_count(get_the_ID(), 'post', 'down');
-//     echo 'Likes: ' . $like_count . ' | Dislikes: ' . $dislike_count;
-// }
-?>
-
-
           <div class="stats">
-
-
-
-
-            <div class="btn__small good">      <?php
-// 翻訳グループ内の「いいね」数を表示
-display_likes_by_translation_group();
-?></div>
-
-
-
-
-            <div class="btn__small good"><?php// echo do_shortcode('[wp_ulike]'); ?></div>
-            <div class="btn__small view"><?php// echo do_shortcode('[post-views]'); ?></div>
+            <div class="btn__small good">
+              <?php
+              // 翻訳グループ内の「いいね」数を表示
+              //display_likes_by_translation_group();
+              ?>
+            </div>
+            <div class="btn__small good"><?php // echo do_shortcode('[wp_ulike]'); 
+                                          ?></div>
+            <div class="btn__small view"><?php // echo do_shortcode('[post-views]'); 
+                                          ?></div>
             <time datetime="<?php echo get_the_date('c'); ?>">
               <?php echo date_i18n(get_option('date_format'), strtotime(get_the_date())); ?>
             </time>
           </div>
           <div class="ttlblock">
-            <h1 class="ttl">SNSで話題の美人アスリートに直撃インタビュー！未だ知らない、鈴木ナナの真相に迫る！</h1>
-            <p class="read">鈴木ナナの衝撃告白！？お顔を真っ赤にしながら赤裸々に告白した内容に撮影スタッフ一同、唖然。それでも可愛いから許せちゃうなんて、もうお手上げですってば！</p>
-            <p class="rating icon__normal before users good">この記事を84%の人が高評価！</p>
+            <h1 class="ttl"><?php echo esc_html(get_the_title()); ?></h1>
+            <p class="lead"><?php echo nl2br(esc_html(get_field('acf_lead_text'))); ?></p>
+            <!-- <p class="rating icon__normal before users good">この記事を84%の人が高評価！</p> -->
           </div>
         </div>
       </div>
+      <?php echo do_shortcode('[aff_cta]'); ?>
+      <?php
+      $article_no = get_field('acf_article_no'); // 記事番号
+      $image_count = get_field('acf_slide_count'); // 画像の総枚数
+      $image_alt_texts = explode("\n", get_field('acf_slide_alt')); // 改行で区切って配列化
 
+      // 記事番号から画像ディレクトリのパスを生成
+      $image_directory = "/img/" . floor($article_no / 100) . "/" . $article_no . "/";
 
-
-
-      <div class="cta__small">
-        <div class="inner-layout layout__article">
-          <div class="btn__normal pri iconright max-width--small margin-inline-auto fixedsizenormall--pc">
-            <a href="#" target="_blank" rel="noopener" class="icon__normal before external-link white" aria-label="サンプル動画を見るボタン">サンプル動画を見る</a>
-          </div>
-          <div class="details js--acmenu">
-            <div class="click">
-              <p class="text icon__normal after add white">入会案内</p>
+      if ($article_no && $image_count > 0):
+      ?>
+        <div class="swiper__fv inner-layout">
+          <div class="swiper article__mainslider" aria-label="<?php echo lang('article.main-slider--aria'); ?>">
+            <div class="swiper-wrapper">
+              <?php for ($i = 1; $i <= $image_count; $i++):
+                $image_path = $image_directory . $i . '.jpg'; // 画像パス
+                if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $image_path)) continue; // 画像が存在しない場合はスキップ
+              ?>
+                <div class="swiper-slide js--contain-img">
+                  <img src="<?php echo esc_url($image_path); ?>" alt="<?php echo esc_attr($image_alt_texts[$i - 1] ?? ''); ?>" loading="lazy">
+                </div>
+              <?php endfor; ?>
             </div>
-            <div class="btn__normal cta twoline js--acmenu-content iconright max-width--small margin-inline-auto fixedsizenormall--pc">
-              <a href="#" target="_blank" rel="noopener" class="icon__normal before external-link white fixedsizenormall--pc" aria-label="英語版の入会案内に遷移するボタン">
-                <span class="twolinelarge fixedsize--pc">今すぐ無料で試す</span>
-                <span class="twolinesmall fixedsize--pc">入会案内（英語）</span>
-              </a>
+            <div class="swiper-pagination-counter">
+              <span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">0</span>
             </div>
           </div>
+          <div class="swiper article__tmbslider" aria-label="<?php echo lang('article.tmb-slider--aria'); ?>">
+            <div class="swiper-wrapper">
+              <?php for ($i = 1; $i <= $image_count; $i++):
+                $image_path = $image_directory . $i . '.jpg'; // 画像パス
+                if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $image_path)) continue; // 画像が存在しない場合はスキップ
+              ?>
+                <div class="swiper-slide js--contain-img">
+                  <img src="<?php echo esc_url($image_path); ?>" alt="<?php echo esc_attr($image_alt_texts[$i - 1] ?? ''); ?>" aria-hidden="true" loading="lazy">
+                </div>
+              <?php endfor; ?>
+            </div>
+          </div>
+          <div class="swiper-button-prev article__mainslider-prev"></div>
+          <div class="swiper-button-next article__mainslider-next"></div>
         </div>
-      </div>
-      <div class="swiper__fv inner-layout">
-        <div class="swiper article__mainslider" aria-label="メインスライダー。○○の画像を表示します。">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/9.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/10.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/11.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/12.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/7.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/8.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/1.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/3.jpg" alt="">
-            </div>
-          </div>
-          <div class="swiper-pagination-counter">
-            <span class="swiper-pagination-current">1</span> /
-            <span class="swiper-pagination-total">0</span>
-          </div>
-        </div>
-        <div class="swiper article__tmbslider" aria-label="メインスライダーのサムネイルです。">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/9.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/10.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/11.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/12.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/7.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/8.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/1.jpg" alt="">
-            </div>
-            <div class="swiper-slide js--contain-img">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/3.jpg" alt="">
-            </div>
-          </div>
-        </div>
-        <!-- ナビゲーション矢印 -->
-        <div class="swiper-button-prev article__mainslider-prev" aria-label="前の画像に戻るボタン"></div>
-        <div class="swiper-button-next article__mainslider-next" aria-label="次の画像に進むボタン"></div>
-      </div>
+      <?php endif; ?>
       <section class="list__meta">
         <div class="list__metabox">
           <div class="inner-layout">
-            <h3 class="ttlmetasmall icon__normal before gray-light video mb0">作品概要</h3>
+            <h2 class="ttlmetasmall icon__normal before gray-light video mb0"><?php echo lang('article.meta-sec-ttl'); ?></h2>
           </div>
         </div>
         <div class="list__metabox">
           <div class="inner-layout">
             <div class="collayoutwrap">
-              <div class="collayout">
-                <div class="left">作品名</div>
+              <div class="collayout js--applyleftwidth">
+                <div class="left"><?php echo lang('article.meta-title'); ?></div>
                 <div class="right">
-                  <h2 class="ttlmetalarge">鈴木ナナに赤裸々告白のインタビューを実施！ Vol.1</h2>
+                  <h2 class="ttlmetalarge"><?php echo esc_html(get_field('acf_video_title')); ?></h2>
                 </div>
               </div>
-              <dl class="collayout">
-                <dt class="left">動画の評価</dt>
+              <dl class="collayout js--getleftwidth">
+                <dt class="left"><?php echo lang('article.meta-rating'); ?></dt>
                 <dd class="right">
                   <div class="icon__ratesmall">
                     <div class="stars">
                       <span class="star star-filled"></span>
                     </div>
-                    <span class="average-score">3.6</span>
+                    <span class="average-score"><?php echo esc_html(get_field('acf_video_rating')); ?></span>
                   </div>
-                  <span class="textrate">（公式サイト評価）</span>
+                  <span class="textrate"><?php echo lang('article.meta-rating-source'); ?></span>
                 </dd>
-              </dl>
-              <dl class="collayout">
-                <dt class="left">提供元</dt>
+                <dt class="left"><?php echo lang('article.meta-provider'); ?></dt>
                 <dd class="right">
-                  <a href="#" class="provider-link">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/devlogo.png" alt="動画屋さんのロゴ" class="provider-logo">
+                  <a href="<?php echo esc_url($affiliate_info['main_url']); ?>" class="provider-link">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . $affiliate_info['logo_src']); ?>" alt="<?php echo esc_attr($affiliate_info['selected_label']); ?>" class="provider-logo">
                   </a>
                   <p class="icon__helpwrap texthelp js--tooltip">
-                    配信元について
-                    <button type="button" class="icon" aria-label="サービス先についての説明を読む"></button>
+                    <?php echo lang('article.provider-info'); ?>
+                    <button type="button" class="icon" aria-label="<?php echo lang('article.provider-info--aria'); ?>"></button>
                     <span class="tooltip">
-                      ここにサービス先の詳細説明を記載します。ここにサービス先の詳細説明を記載します。ここにサービス先の詳細説明を記載します。ここにサービス先の詳細説明を記載します。<br>テキスト
-                      <button type="button" class="tooltip-close" aria-label="閉じる"></button>
+                      <?php echo ($affiliate_info['provider_description']); ?>
+                      <button type="button" class="tooltip-close" aria-label="<?php echo lang('article.tooltip-close--aria'); ?>"></button>
                     </span>
                   </p>
                 </dd>
               </dl>
             </div>
-            <div class="ttl-localization js--copy">
-              <span class="language-label" lang="ja">日本語作品名</span>
-              <h3 class="ttl-localized js--copybtn icon__normal copy after gray-3 small" aria-label="鈴木ナナに赤裸々告白のインタビューを実施！ Vol.1（日本語）" lang="ja">鈴木ナナに赤裸々告白のインタビューを実施！ Vol.1</h3>
-              <div class="toast__content js--copycontent" data-message-success="<?php echo lang('copy-success'); ?>" data-message-error="<?php echo lang('copy-error'); ?>"></div>
-            </div>
-            <div class="ttl-localization js--copy">
-              <span class="language-label" lang="en">英語作品名</span>
-              <h3 class="ttl-localized js--copybtn icon__normal copy after gray-3 small" aria-label="Exclusive Interview with Nana Suzuki! Vol.1 (English)" lang="en">Exclusive Interview with Nana Suzuki! Vol.1</h3>
-              <div class="toast__content js--copycontent" data-message-success="<?php echo lang('copy-success'); ?>" data-message-error="<?php echo lang('copy-error'); ?>"></div>
-            </div>
+            <script>
+              const copyMessages = {
+                success: "<?php echo lang('article.copy-success'); ?>",
+                error: "<?php echo lang('article.copy-error'); ?>"
+              };
+            </script>
+            <?php
+            // 固定フィールドのタイトルを取得
+            $video_titles = [
+              'ja' => get_field('acf_video_title_ja'),
+              'en' => get_field('acf_video_title_en')
+            ];
+
+            foreach ($video_titles as $lang_code => $title) :
+              if (!empty($title)) :
+            ?>
+                <div class="ttl-localization js--copy">
+                  <span class="language-label" lang="<?php echo esc_attr($lang_code); ?>">
+                    <?php echo lang("article.language-label-{$lang_code}"); ?>
+                  </span>
+                  <h3 class="ttl-localized js--copybtn icon__normal copy after gray-3 small"
+                    aria-label="<?php echo esc_html($title); ?>"
+                    lang="<?php echo esc_attr($lang_code); ?>">
+                    <?php echo esc_html($title); ?>
+                  </h3>
+                  <div class="toast__content js--copycontent"></div>
+                </div>
+            <?php
+              endif;
+            endforeach;
+            ?>
           </div>
         </div>
         <div class="list__metabox">
           <div class="inner-layout">
-            <h4 class="ttlmetasmall">映像情報</h4>
-            <div class="col2 col2-aline-item-center">
-              <nav class="tagwrap" aria-label="映像情報タグリスト">
+            <h4 class="ttlmetasmall"><?php echo lang('article.meta-video-info'); ?></h4>
+            <nav class="tagwrap" aria-label="<?php echo lang('article.meta-video-info-tags'); ?>">
+              <?php
+              // 投稿のカスタムタクソノミータームを取得する関数
+              function get_taxonomy_terms_list($post_id, $taxonomy)
+              {
+                $terms = get_the_terms($post_id, $taxonomy);
+                if ($terms && !is_wp_error($terms)) {
+                  return array_map(function ($term) {
+                    return [
+                      'name' => esc_html($term->name),
+                      'slug' => esc_attr($term->slug),
+                      'url' => get_term_link($term) // タームのURL
+                    ];
+                  }, $terms);
+                }
+                return [];
+              }
+
+              // 投稿IDを取得
+              $post_id = get_the_ID();
+
+              // 3つのカスタムタクソノミーのタームを取得
+              $censor_terms = get_taxonomy_terms_list($post_id, 'censor'); // 検閲・規制
+              $format_terms = get_taxonomy_terms_list($post_id, 'format'); // 映像形式
+              $playtime_terms = get_taxonomy_terms_list($post_id, 'playtime'); // 再生時間
+
+              // すべてのタームを結合（表示順: censor → format → playtime）
+              $all_terms = array_merge($censor_terms, $format_terms, $playtime_terms);
+              ?>
+
+              <?php if (!empty($all_terms)) : ?>
                 <ul class="btn__tag fixedsize--pc">
-                  <li><a href="#" class="tag tag-uncensored">無修正</a></li>
-                  <li><a href="#" class="tag">4K</a></li>
-                  <li><a href="#" class="tag">30〜60分</a></li>
+                  <?php foreach ($all_terms as $term) : ?>
+                    <li><a href="<?php echo esc_url($term['url']); ?>" class="tag tag-<?php echo $term['slug']; ?>"><?php echo $term['name']; ?></a></li>
+                  <?php endforeach; ?>
                 </ul>
-              </nav>
-              <time class="playtime" datetime="PT48M">(再生時間：0時間48分)</time>
-            </div>
+              <?php endif; ?>
+            </nav>
+            <?php
+            // ACF から再生時間を取得（例: "01:00:20" または "00:45:00"）
+            $playtime = get_field('acf_playtime');
+
+            if ($playtime) {
+              // 時間・分・秒を分解
+              list($hours, $minutes, $seconds) = explode(':', $playtime);
+
+              $hours = (int)$hours;
+              $minutes = (int)$minutes;
+              $seconds = (int)$seconds;
+
+              // `datetime` 用 ISO 8601 フォーマット（PTxxHxxMxxS）
+              $iso_playtime = 'PT';
+              if ($hours > 0) $iso_playtime .= "{$hours}H";
+              if ($minutes > 0) $iso_playtime .= "{$minutes}M";
+              if ($seconds > 0) $iso_playtime .= "{$seconds}S";
+
+              // もし全てゼロだったら、デフォルトで `PT0S` にする
+              if ($iso_playtime === 'PT') {
+                $iso_playtime = 'PT0S';
+              }
+
+              // `HH:MM:SS` 形式で統一
+              $localized_playtime = sprintf("%d:%02d:%02d", $hours, $minutes, $seconds);
+            }
+            ?>
+            <time class="playtime" datetime="<?php echo esc_attr($iso_playtime); ?>"><?php echo lang('article.meta-playtime'); ?> : <?php echo esc_html($localized_playtime); ?></time>
           </div>
         </div>
         <div class="list__metabox">
           <div class="inner-layout">
-            <h4 class="ttlmetasmall">出演</h4>
-            <nav class="tagwrap" aria-label="出演タグリスト">
+            <h4 class="ttlmetasmall"><?php echo lang('article.meta-cast'); ?></h4>
+            <nav class="tagwrap" aria-label="<?php echo lang('article.meta-cast-list--aria'); ?>">
               <ul class="btn__tag fixedsize--pc">
-                <li><a href="#" class="tag">鈴木ナナ</a></li>
+                <?php
+                // 出演者（cast）のタームを取得
+                $terms = get_the_terms(get_the_ID(), 'cast');
+                if ($terms && !is_wp_error($terms)) :
+                  foreach ($terms as $term) :
+                    $term_link = get_term_link($term);
+                ?>
+                    <li><a href="<?php echo esc_url($term_link); ?>" class="tag"><?php echo esc_html($term->name); ?></a></li>
+                <?php
+                  endforeach;
+                endif;
+                ?>
               </ul>
             </nav>
           </div>
         </div>
         <div class="list__metabox">
           <div class="inner-layout">
-            <h4 class="ttlmetasmall">料金プラン</h4>
-            <dl class="list__dlcolon">
-              <dt>無料トライアルプラン</dt>
-              <dd class="free">$0（三日間）</dd>
-            </dl>
-            <dl class="list__dlcolon">
-              <dt>月額プラン</dt>
-              <dd>$44</dd>
-            </dl>
-            <dl class="list__dlcolon">
-              <dt>年間プラン</dt>
-              <dd>$440</dd>
-            </dl>
-            <p class="price">
-              <a href="" target="_blank" class="icon__normal after external-link gray-3" rel="noopener">料金プランの詳細を確認する（日本語）</a>
-            </p>
-            <p class="price">
-              <a href="" target="_blank" class="icon__normal after external-link gray-3" rel="noopener">料金プランの詳細を確認する（英語）</a>
-            </p>
+            <h4 class="ttlmetasmall"><?php echo lang('article.meta-pricing'); ?></h4>
+            <?php if (!empty($affiliate_info['pricing_list'])) : ?>
+              <dl class="list__dlcolon">
+                <?php foreach ($affiliate_info['pricing_list'] as $pricing) : ?>
+                  <dt><?php echo esc_html($pricing['label']); ?></dt>
+                  <dd<?php echo !empty($pricing['class']) ? ' class="' . $pricing['class'] . '"' : ''; ?>><?php echo esc_html($pricing['price']); ?></dd>
+                  <?php endforeach; ?>
+              </dl>
+            <?php endif; ?>
+            <?php if (!empty($affiliate_info['pricing_links'])) : ?>
+              <?php foreach ($affiliate_info['pricing_links'] as $link) : ?>
+                <p class="price">
+                  <a href="<?php echo esc_url($link['url']); ?>" target="_blank" class="icon__normal after external-link gray-3" rel="noopener">
+                    <?php echo esc_html($link['text']); ?>
+                  </a>
+                </p>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
         </div>
         <div class="list__metabox">
           <div class="inner-layout">
-            <h4 class="ttlmetasmall">タグ</h4>
-            <nav class="tagwrap" aria-label="タグリスト">
-              <ul class="btn__tag fixedsize--pc">
-                <li><a href="#" class="tag">タグA</a></li>
-                <li><a href="#" class="tag">タグB</a></li>
-                <li><a href="#" class="tag">タグC</a></li>
-                <li><a href="#" class="tag">タグD</a></li>
-                <li><a href="#" class="tag">タグE</a></li>
-                <li><a href="#" class="tag">タグF</a></li>
-              </ul>
+            <h4 class="ttlmetasmall"><?php echo lang('article.meta-tags'); ?></h4>
+            <nav class="tagwrap" aria-label="<?php echo lang('article.meta-tags--aria'); ?>">
+              <?php
+              // 対象のカスタムタクソノミー
+              $taxonomies = ['genre', 'outfit', 'girl', 'guy', 'body', 'rel', 'scene', 'play'];
+              // 空の配列を用意して、タームを格納
+              $terms_list = [];
+              foreach ($taxonomies as $taxonomy) {
+                // 投稿に紐づいているタームを取得
+                $terms = get_the_terms(get_the_ID(), $taxonomy);
+                // 取得できた場合、リストに追加
+                if ($terms && !is_wp_error($terms)) {
+                  foreach ($terms as $term) {
+                    $terms_list[] = [
+                      'name' => $term->name,
+                      'slug' => $term->slug,
+                      'link' => get_term_link($term)
+                    ];
+                  }
+                }
+              }
+              // タームが存在する場合のみ出力
+              if (!empty($terms_list)) :
+              ?>
+                <ul class="btn__tag fixedsize--pc">
+                  <?php foreach ($terms_list as $term) : ?>
+                    <li><a href="<?php echo esc_url($term['link']); ?>" class="tag"><?php echo esc_html($term['name']); ?></a></li>
+                  <?php endforeach; ?>
+                </ul>
+              <?php endif; ?>
             </nav>
           </div>
         </div>
@@ -318,14 +306,22 @@ display_likes_by_translation_group();
     </header>
     <section class="article__the_contents">
       <div class="inner-layout layout__article">
-        <section class="sec">
+        <?php if (have_posts()) : ?>
+          <?php while (have_posts()) : the_post(); ?>
+            <?php the_content(); ?>
+          <?php endwhile; ?>
+        <?php endif; ?>
+
+
+        <!-- the_content 中身 後で記事に入力-->
+        <!--<section class="sec">
           <h2>吾輩は猫である</h2>
           <p>吾輩わがはいは猫である。名前はまだ無い。どこで生れたかとんと見当けんとうがつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。</p>
           <section class="conversation">
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/icon-actor.png" alt="男優のアイコン">
+                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
                 </span>
                 <figcaption>男優</figcaption>
               </figure>
@@ -334,7 +330,7 @@ display_likes_by_translation_group();
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/icon-actress.jpg" alt="リリちゃんのアイコン">
+                  <img src="/img/0/1/icon.jpg" alt="リリちゃんのアイコン">
                 </span>
                 <figcaption>リリちゃん</figcaption>
               </figure>
@@ -343,8 +339,9 @@ display_likes_by_translation_group();
           </section>
           <p>吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪どうあくな種族であったそうだ。この書生というのは時々我々を捕つかまえて煮にて食うという話である。</p>
           <div class="img js--contain-img">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/7.jpg" alt="">
+            <img src="/img/0/1/7.jpg" alt="">
           </div>
+          [aff_cta]
         </section>
         <section class="sec">
           <h2>しかしその当時は何という考もなかったから別段恐しい</h2>
@@ -353,7 +350,7 @@ display_likes_by_translation_group();
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/icon-actor.png" alt="男優のアイコン">
+                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
                 </span>
                 <figcaption>男優</figcaption>
               </figure>
@@ -362,7 +359,7 @@ display_likes_by_translation_group();
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/icon-actress.jpg" alt="リリちゃんのアイコン">
+                  <img src="/img/0/1/icon.jpg" alt="リリちゃんのアイコン">
                 </span>
                 <figcaption>リリちゃん</figcaption>
               </figure>
@@ -371,7 +368,7 @@ display_likes_by_translation_group();
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/icon-actor.png" alt="男優のアイコン">
+                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
                 </span>
                 <figcaption>男優</figcaption>
               </figure>
@@ -380,7 +377,7 @@ display_likes_by_translation_group();
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/icon-actress.jpg" alt="リリちゃんのアイコン">
+                  <img src="/img/0/1/icon.jpg" alt="リリちゃんのアイコン">
                 </span>
                 <figcaption>リリちゃん</figcaption>
               </figure>
@@ -389,7 +386,7 @@ display_likes_by_translation_group();
             <div class="dialog">
               <figure>
                 <span class="iconwrap">
-                  <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/icon-actor.png" alt="男優のアイコン">
+                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
                 </span>
                 <figcaption>男優</figcaption>
               </figure>
@@ -399,56 +396,73 @@ display_likes_by_translation_group();
           <p>ただ彼の掌てのひらに載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ちついて書生の顔を見たのがいわゆる人間というものの見始みはじめであろう。</p>
           <div class="img col2 js--contain-img">
             <figure>
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/9.jpg" alt="">
+              <img src="/img/0/1/9.jpg" alt="">
               <figcaption>キャプションは必ず存在します</figcaption>
             </figure>
             <figure>
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/5.jpg" alt="">
+              <img src="/img/0/1/5.jpg" alt="">
               <figcaption>キャプションは必ず存在します</figcaption>
             </figure>
           </div>
-        </section>
+        </section>-->
+        <!-- END the_content 中身 後で記事に入力-->
+
+
+
       </div>
     </section>
     <footer class="article__footer layout__padding">
       <div class="cta__large inner-layout layout__article">
         <div class="ttllayout">
-          <h2>JAVの素晴らしさを<br>もっと世界に。</h2>
+          <h2><?php echo lang('article.footer-heading'); ?></h2>
           <ul>
-          <li class="logo-dev">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/devlogo.png" alt="サービス先ロゴ" width="246" height="57">
-          </li>
-          <li class="logo-javrev">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/logo.svg" alt="JAVREV" width="220" height="43">
-          </li>
+            <li class="logo-dev">
+              <img src="<?php echo esc_url(get_template_directory_uri() . $affiliate_info['logo_src']); ?>" alt="<?php echo esc_attr($affiliate_info['selected_label']); ?>">
+            </li>
+            <li class="logo-javrev">
+              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/logo.svg" alt="JAVREV">
+            </li>
           </ul>
         </div>
-        <ul class="list__benefits">
-          <li>全動画見放題</li>
-          <li>3日間の無料体験</li>
-          <li>月間 / 年間契約</li>
-        </ul>
+        <?php if (!empty($affiliate_info['benefits_list'])) : ?>
+          <ul class="list__benefits">
+            <?php foreach ($affiliate_info['benefits_list'] as $benefit) : ?>
+              <li><?php echo $benefit; ?></li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
         <div class="highlighttext">
-          <p>高品質で安心・安全な有償JAV。</p>
-          <p>広告に煩わされる事の無い極上の時間を、<br>あなたへお届けします。</p>
+          <p><?php echo lang('article.footer-highlighttext-1'); ?></p>
+          <p><?php echo lang('article.footer-highlighttext-2'); ?></p>
         </div>
-        <div class="btn__normal cta twoline js--acmenu-content iconright max-width--normal margin-inline-auto fixedsizenormall--pc">
-          <a href="#" target="_blank" rel="noopener" class="icon__normal before external-link white fixedsizenormall--pc" aria-label="英語版の入会案内に遷移するボタン">
-            <span class="twolinelarge fixedsize--pc">今すぐ無料で試す</span>
-            <span class="twolinesmall fixedsize--pc">入会案内（英語）</span>
-          </a>
-        </div>
-        <a href="" class="linkother icon__normal after external-link gray inline-block" aria-label="日本語版の入会案内に遷移するボタン">入会案内(日本語)</a>
+        <?php if (!empty($affiliate_info['cta_main'])) : ?>
+          <div class="btn__normal cta twoline js--acmenu-content iconright max-width--normal margin-inline-auto fixedsizenormall--pc">
+            <a href="<?php echo esc_url($affiliate_info['cta_main']['url']); ?>" target="_blank" rel="noopener" class="icon__normal before external-link white fixedsizenormall--pc" aria-label="<?php echo esc_attr($affiliate_info['cta_main']['aria']); ?>">
+              <span class="twolinelarge fixedsize--pc"><?php echo esc_html($affiliate_info['cta_main']['text']); ?></span>
+              <span class="twolinesmall fixedsize--pc"><?php echo esc_html($affiliate_info['cta_main']['lang']); ?></span>
+            </a>
+          </div>
+        <?php endif; ?>
+        <?php if (!empty($affiliate_info['cta_sub_links'])) : ?>
+          <?php foreach ($affiliate_info['cta_sub_links'] as $sub_link) : ?>
+            <a href="<?php echo esc_url($sub_link['url']); ?>" class="linkother icon__normal after external-link gray inline-block" aria-label="<?php echo esc_attr($sub_link['aria']); ?>">
+              <?php echo esc_html($sub_link['text']); ?>
+            </a>
+          <?php endforeach; ?>
+        <?php endif; ?>
         <div class="box">
           <h3 class="ctaboxlogo logo-dev">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/devlogo.png" alt="サービス先ロゴ" width="246" height="57">
+            <img src="<?php echo esc_url(get_template_directory_uri() . $affiliate_info['logo_src']); ?>" alt="<?php echo esc_attr($affiliate_info['selected_label']); ?>">
           </h3>
-          <p>配信元は2001年から運営している、信頼と実績ある老舗日本動画専門サイトです。</p>
+          <p><?php echo lang('aff.caribbeancom-provider-description'); ?></p>
         </div>
-        <ul class="list__asterisk gray">
-          <li>無料トライアルプラン$0、月間プラン$44、年間プラン$440。合計3つのプランをご用意しております。</li>
-          <li>無料トライアルプラン$0は英語ページ専用の特典となります。</li>
-        </ul>
+        <?php if (!empty($affiliate_info['asterisk_list'])) : ?>
+          <ul class="list__asterisk gray">
+            <?php foreach ($affiliate_info['asterisk_list'] as $asterisk) : ?>
+              <li><?php echo esc_html($asterisk); ?></li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
       </div>
     </footer>
   </article>

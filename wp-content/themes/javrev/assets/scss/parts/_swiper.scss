@@ -4,6 +4,7 @@
 //=====================================================
 .swiper__fv {
   position: relative;
+  @include z-index-1;
   @include media(pc) {
     margin-inline: auto;
     width: min(100%, 72rem);

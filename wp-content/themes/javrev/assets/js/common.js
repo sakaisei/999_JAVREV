@@ -153,19 +153,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // カードのhover要素
 //=====================================================
-document.querySelectorAll('.card__normal').forEach(function(card) {
-  const button = card.querySelector('.btn__normal .btn');
-  const link = card.querySelector('.link');
+// document.querySelectorAll('.card__normal').forEach(function(card) {
+//   const button = card.querySelector('.btn__normal .btn');
+//   const link = card.querySelector('.link');
   
-  if (button && link) {
-    button.addEventListener('mouseover', function() {
-      link.classList.add('is--hover');
-    });
-    button.addEventListener('mouseout', function() {
-      link.classList.remove('is--hover');
-    });
-  }
-});
+//   if (button && link) {
+//     button.addEventListener('mouseover', function() {
+//       link.classList.add('is--hover');
+//     });
+//     button.addEventListener('mouseout', function() {
+//       link.classList.remove('is--hover');
+//     });
+//   }
+// });
 
 // js--acmenu
 //=====================================================
@@ -286,6 +286,25 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+// .leftの横幅を揃える
+// ==============================
+function applyLeftColumnWidth() {
+  let maxWidth = 0;
+  // `.js--getleftwidth` 内の `.left` 要素の最大幅を取得
+  document.querySelectorAll('.js--getleftwidth .left').forEach(el => {
+    maxWidth = Math.max(maxWidth, el.offsetWidth);
+  });
+  // `.js--applyleftwidth` 内の `.left` 要素に最大幅を適用
+  document.querySelectorAll('.js--applyleftwidth .left').forEach(el => {
+    el.style.width = maxWidth + 'px';
+  });
+}
+// 初回実行
+applyLeftColumnWidth();
+// ウィンドウリサイズ時にも再適用
+window.addEventListener('resize', applyLeftColumnWidth);
+
+
 // 画像で縦アスペクト比を判定 ※親に.js--contain-imgは付与すること！
 // ==============================
 document.addEventListener('DOMContentLoaded', function () {
@@ -352,38 +371,59 @@ document.addEventListener('DOMContentLoaded', () => {
 // テキストコピー　+　トースト通知
 // ==============================
 document.addEventListener('DOMContentLoaded', () => {
-  const copyContainers = document.querySelectorAll('.js--copy');
-
-  copyContainers.forEach(container => {
-    const copyButton = container.querySelector('.js--copybtn');
-    const toastContainer = container.querySelector('.js--copycontent');
-    const successMessage = toastContainer.dataset.messageSuccess;
-    const errorMessage = toastContainer.dataset.messageError;
-
-    copyButton.addEventListener('click', () => {
+  document.querySelectorAll('.js--copybtn').forEach(copyButton => {
+    copyButton.addEventListener('click', async () => {
       const textToCopy = copyButton.getAttribute('aria-label');
+      const container = copyButton.closest('.js--copy').querySelector('.js--copycontent');
 
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        showToast(successMessage, toastContainer);
-      }).catch(() => {
-        showToast(errorMessage, toastContainer);
-      });
+      if (!textToCopy) {
+        showToast(copyMessages.error || "コピーするテキストが見つかりません", container);
+        return;
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          showToast(copyMessages.success || "コピーしました", container);
+        } catch (err) {
+          console.error("クリップボードへの書き込みに失敗:", err);
+          showToast(copyMessages.error || "コピーに失敗しました", container);
+        }
+      } else {
+        fallbackCopyText(textToCopy, container);
+      }
     });
   });
-
-  function showToast(message, container) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    container.appendChild(toast);
-
-    setTimeout(() => toast.classList.add('is--visible'), 100);
-    setTimeout(() => {
-      toast.classList.remove('is--visible');
-      toast.addEventListener('transitionend', () => toast.remove());
-    }, 3000);
-  }
 });
+
+function fallbackCopyText(text, container) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand("copy");
+    showToast(copyMessages.success || "コピーしました（フォールバック）", container);
+  } catch (err) {
+    showToast(copyMessages.error || "コピーに失敗しました", container);
+  }
+  document.body.removeChild(textarea);
+}
+
+function showToast(message, container) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+
+  setTimeout(() => toast.classList.add('is--visible'), 100);
+  setTimeout(() => {
+    toast.classList.remove('is--visible');
+    toast.addEventListener('transitionend', () => toast.remove());
+  }, 3000);
+}
+
+
 
 // swiper
 // ==============================
@@ -422,7 +462,37 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// articleのfv
+// サムネイルのクリックを親のaタグ伝播を止める
+document.addEventListener('DOMContentLoaded', function () {
+  // すべてのサムネイルスライダーを取得
+  const thumbWrappers = document.querySelectorAll('.tmbsliderwrap');
+
+  thumbWrappers.forEach(thumbWrapper => {
+    thumbWrapper.addEventListener('click', function (event) {
+      event.preventDefault(); // aタグのデフォルトの動作を防ぐ
+      event.stopPropagation(); // 親要素のクリックイベントを阻止
+    });
+  });
+});
+
+// サムネイルにhoverがあったら、is--nohoverを付与
+document.addEventListener('DOMContentLoaded', function () {
+  const tmbsliderwraps = document.querySelectorAll('.tmbsliderwrap');
+
+  tmbsliderwraps.forEach(wrapper => {
+    wrapper.addEventListener('mouseenter', function () {
+      this.closest('.card__normal').querySelector('.link').classList.add('is--nohover');
+    });
+
+    wrapper.addEventListener('mouseleave', function () {
+      this.closest('.card__normal').querySelector('.link').classList.remove('is--nohover');
+    });
+  });
+});
+
+
+// articleのfv swiper
+// ==============================
 document.addEventListener('DOMContentLoaded', function () {
   const mainSliderElement = document.querySelector('.swiper.article__mainslider');
   const thumbSliderElement = document.querySelector('.swiper.article__tmbslider');

@@ -16,8 +16,15 @@
   @include media(pc) {
     font-size: min(18/1440*100vw, 1.8rem);
     display: grid;
-    gap: clamp(60px*0.6, 60/1440*100vw, 6rem);
+    gap: clamp(40px*0.6, 40/1440*100vw, 4rem);
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @include media(pc-xl) {
+    gap: clamp(50px*0.6, 50/1440*100vw, 5rem);
+    font-size: 2rem;
+  }
+  @include media(pc-2xl) {
+    gap: 6rem;
     font-size: 2rem;
   }
   &.col2 {
@@ -47,7 +54,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  //margin-bottom: 6.2em;
   background: colors(black-light);
   border-radius: clamp(30px*0.5, 30/750*100vw, 3rem*0.5);
   @include media(pc) {
@@ -57,8 +63,11 @@
     display: block;
     text-decoration: none;
     color: inherit;
-    &:hover,
-    &.is--hover {
+    //background: yellow;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    &:hover {
       .mainslider-slide {
         img {
           @include media(pc) {
@@ -66,14 +75,37 @@
           }
         }
       }
-      & + .inner-layout-2 {
+      .btn__normal {
+        .btn {
+          opacity: 0.7;
+        }
+      }
+    }
+    // 状態変化
+    &.is--nohover {
+      &:hover {
+        .mainslider-slide {
+          img {
+            @include media(pc) {
+              transform: scale(1.01);
+            }
+          }
+        }
         .btn__normal {
           .btn {
-            opacity: 0.7;
+            opacity: 1;
           }
         }
       }
     }
+  }
+  .mainsliderwrap {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    max-width: 100%;
+    //max-height: 100vh;
+    // flex-shrink: 0;
+    overflow: hidden;
   }
   .mainslider {
     position: relative;
@@ -90,10 +122,15 @@
       height: 100%;
       object-fit: cover;
       transition: 0.5s ease;
+      transform: scale(1.01);
     }
   }
-  .inner-layout-1 {
-    padding: 1.5% 5% 0 5%;
+  .inner-layout-card {
+    padding: 1.5% 5% 8.5% 5%;
+    //background: red;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
   .quality {
     position: absolute;
@@ -139,21 +176,30 @@
       font-size: clamp(16px, 18/1440*100vw, 1.9rem);
     }
   }
-  .inner-layout-2 {
-    padding: 0 5% 8.5% 5%;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
   .tmbsliderwrap {
     font-size: clamp(28px*0.5, 28/750*100vw, 2.8rem*0.5);
     width: 60%;
     margin: 0.8em 0 1.25em;
+    position: relative;
     @include media(pc) {
       font-size: clamp(15px, 18/1440*100vw, 1.8rem);
     }
+    // &:after {
+    //   content: "";
+    //   display: block;
+    //   background: red;
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: min(calc((((93vw *0.9) * 0.6) - (12px*2)) / 3), 74px);
+    //   height: min(calc((((93vw *0.9) * 0.6) - (12px*2)) / 3), 74px);
+    //   z-index: 999;
+    //   @include media(tb) {}
+    // }
   }
-  .tmbslider {}
+  .tmbslider {
+    //height: min(calc((((93vw *0.9) * 0.6) - (12px*2)) / 3), 74px);
+  }
   .tmbslider-slide {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -164,6 +210,7 @@
     border-radius: clamp(10px*0.5, 10/750*100vw, 1rem*0.5);
     opacity: 0.3;
     transition: opacity 0.3s ease;
+    //height: min(calc((((93vw *0.9) * 0.6) - (12px*2)) / 3), 74px);
     cursor: pointer;
     &:hover {
       opacity: 0.8;
@@ -172,19 +219,23 @@
       opacity: 1;
     }
     img {
+      // 0.9はinner-layout-cardのpadding、0.6は.tmbsliderwrapのwidth、12pxはswiperのspaceBetween
+      //width: min(calc((((93vw *0.9) * 0.6) - (12px*2)) / 3), 74px);
+      //height: min(calc((((93vw *0.9) * 0.6) - (12px*2)) / 3), 74px);
+      object-fit: cover;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      @include media(tb) {}
     }
   }
   .tagwrap {
-    margin-bottom: auto;
+    margin-bottom: 1.5em;
   }
   .btn__tag {
     // _btn.scssに記述
   }
   .btn__normal {
-    margin-top: 1.5em;
+    margin-top: auto;
     // _btn.scssに記述
   }
   // .small
@@ -200,8 +251,11 @@
         border-radius: min(20/1440*100vw, 2rem) min(20/1440*100vw, 2rem) 0 0;
       }
     }
-    .inner-layout-1 {
-      padding: 1.5% 3% 0 3%;
+    .inner-layout-card {
+      padding: 1.5% 3% 8.5% 3%;
+      @include media(pc) {
+        padding: 1.5% 4% 8.5% 4%;
+      }
     }
     .quality {
       position: absolute;
@@ -230,24 +284,25 @@
       }
     }
     .ttl {
-      font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.5);
+      font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.6);
       display: -webkit-box; /* 必須: Flexboxのようなボックスレイアウト */
       -webkit-box-orient: vertical; /* 必須: ボックス方向を垂直に設定 */
       overflow: hidden; /* 必須: ボックス外を非表示 */
       text-overflow: ellipsis; /* 必須: 「...」を付ける */
       -webkit-line-clamp: 2; /* 必須: 最大行数を指定（この場合2行） */
       max-height: calc(1.5em * 2); /* 最大行高を計算（2行分） */
+      @include media(tb) {
+        font-size: clamp(26px*0.5, 26/750*100vw, 2.6rem*0.5);
+      }
       @include media(pc) {
         font-size: clamp(14px, 15/1440*100vw, 1.6rem);
       }
-    }
-    .inner-layout-2 {
-      padding: 0 3% 8.5% 3%;
     }
     .tmbsliderwrap {
       font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.5);
       width: 95%;
       margin: 1em 0 1em;
+      //pointer-events: none;
       @include media(tb) {
         width: 80%;
       }
@@ -258,9 +313,11 @@
         margin-right: 6px !important;
       }
     }
-    .btn__normal {
-      margin-top: 0.75em;
-      // _btn.scssに記述
+    .tagwrap {
+      margin-bottom: 1em;
+      @include media(pc) {
+        margin-bottom: 0.5em;
+      }
     }
   }
 

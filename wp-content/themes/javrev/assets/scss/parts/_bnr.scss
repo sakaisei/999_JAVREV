@@ -81,14 +81,14 @@
     flex-direction: column;
   }
   .ttl {
-    font-size: clamp(32px*0.5, 32/750*100vw, 3.2rem*0.5);
+    font-size: clamp(30px*0.5, 30/750*100vw, 3rem*0.5);
     display: flex;
     align-items: center;
     font-weight: 700;
     margin-bottom: 0.4em;
     line-height: 1.2;
     @include media(tb-l) {
-      font-size: clamp(32px*0.5, 32/750*100vw, 3.2rem*0.55);
+      font-size: clamp(30px*0.5, 30/750*100vw, 3rem*0.55);
     }
     @include media(pc) {
       font-size: 1.8rem;

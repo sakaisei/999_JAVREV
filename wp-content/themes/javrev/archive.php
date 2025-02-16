@@ -1,8 +1,8 @@
 <?php get_header(); ?>
 <?php
-  if (function_exists('yoast_breadcrumb')) {
-    yoast_breadcrumb('<nav class="list__breadcrumb margin-top">', '</nav>');
-  }
+if (function_exists('yoast_breadcrumb')) {
+  yoast_breadcrumb('<nav class="list__breadcrumb margin-top">', '</nav>');
+}
 ?>
 <main class="main__common">
   <section class="contents">
@@ -33,6 +33,38 @@
         echo '</h1>';
         ?>
         <p class="text">各descriptionが挿入されます。</p>
+
+
+
+
+
+
+
+
+        <p>
+          <?php
+
+if (is_archive()) {
+    error_log('✅ is_archive() detected!');
+}
+
+if (is_post_type_archive('jav')) {
+    error_log('✅ is_post_type_archive("jav") detected!');
+}
+
+if (is_tax('format')) {
+    error_log('✅ is_tax("format") detected!');
+}
+
+error_log('Current Query Vars: ' . print_r($wp_query->query_vars, true));
+
+          ?>
+        </p>
+
+
+
+
+
       </div>
       <?php get_template_part('assets/inc/parts/btn__query'); ?>
       <div class="card__normalwrap">

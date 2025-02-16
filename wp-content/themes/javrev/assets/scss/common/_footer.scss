@@ -40,14 +40,14 @@
     .lang {
       position: absolute;
       font-weight: 700;
-      top: 0;
+      top: -0.1rem;
       right: clamp(-30px*0.5, -30/750*100vw, -3rem*0.6);
       @include media(pc) {
-        right: -1.5rem;
+        right: -2rem;
       }
     }
   }
-  .footer__read {
+  .footer__lead {
     white-space: nowrap;
     font-size: clamp(24px*0.5, 24/750*100vw, 2.4rem*0.6);
     font-weight: 700;

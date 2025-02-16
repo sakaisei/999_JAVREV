@@ -2,8 +2,8 @@
 
 // 一度フラッシュしたらコメントアウトする
 //=====================================================
-// add_action('init', function() {
-//   flush_rewrite_rules();
-// });
+add_action('init', function() {
+  flush_rewrite_rules();
+});
 
 ?>

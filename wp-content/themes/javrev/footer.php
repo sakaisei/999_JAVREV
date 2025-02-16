@@ -3,9 +3,9 @@
     <a href="/" class="logolayout">
       <div class="footer__logo">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/logo.svg" alt="JAVREV">
-        <span class="lang"><?php echo lang('logo'); ?></span>
+        <span class="lang"><?php echo lang('common.logo'); ?></span>
       </div>
-      <p class="footer__read">さあ、動画の世界を体験しよう</p>
+      <p class="footer__lead">さあ、動画の世界を体験しよう</p>
     </a>
     <nav class="footer__listwrap" aria-label="フッターナビゲーション">
       <ul class="footer__list">

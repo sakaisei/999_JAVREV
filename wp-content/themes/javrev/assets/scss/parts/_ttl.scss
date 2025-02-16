@@ -59,10 +59,10 @@
       line-height: 1.7;
       font-weight: 700;
       @include media(pc) {
-        font-size: 3rem;
+        font-size: 2.8rem;
       }
     }
-    .read {
+    .lead {
       font-size: clamp(26px*0.5, 24/750*100vw, 2.6rem*0.6);
       color: colors(gray-light);
       line-height: 1.75;

@@ -11,7 +11,7 @@
     <div class="gnav__logo">
       <a href="/">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/logo.svg" alt="JAVREV" width="220" height="43">
-        <span class="lang"><?php echo lang('logo'); ?></span>
+        <span class="lang"><?php echo lang('common.logo'); ?></span>
       </a>
     </div>
     <button class="gnav__hamburger" aria-label="グローバルナビゲーションを表示">
@@ -20,7 +20,7 @@
     <nav class="gnav__nav" aria-label="グローバルナビゲーション">
       <a href="/" class="logo" aria-label="トップページへ戻る">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/common/logo.svg" alt="JAVREV" width="220" height="43">
-        <span class="lang"><?php echo lang('logo'); ?></span>
+        <span class="lang"><?php echo lang('common.logo'); ?></span>
       </a>
       <ul class="mainnav">
         <li class="filtering btn">

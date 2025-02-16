@@ -308,7 +308,7 @@
     color: colors(rate);
     margin-top: 0.15em;
     @include media(pc) {
-      font-size: min(14/1440*100vw, 1.4rem);
+      font-size: 1.5rem;
     }
   }
 }

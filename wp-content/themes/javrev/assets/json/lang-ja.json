@@ -1,6 +1,5 @@
 {
   "logo": "JP",
-  "test": "テストテキストです。",
-  "copy-success": "コピーされました。",
+  "copy-success": "コピーしました。",
   "copy-error": "コピーに失敗しました"
 }

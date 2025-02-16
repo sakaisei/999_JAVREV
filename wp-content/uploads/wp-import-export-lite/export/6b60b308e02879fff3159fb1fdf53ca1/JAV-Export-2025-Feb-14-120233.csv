@@ -1,0 +1,19 @@
+ID,Title,Content,Excerpt,Date,"Post Type",Permalink,_wpml_import_language_code,_wpml_import_source_language_code,_wpml_import_translation_group
+10,SNSで話題の美人アスリートに直撃インタビュー！未だ知らない、鈴木ナナの真相に迫る！(en),"<!-- wp:paragraph -->
+<p>text_test(en)</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:shortcode -->
+[aff_cta]
+<!-- /wp:shortcode -->
+
+<!-- wp:paragraph -->
+<p>どうだろ？</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->",,"2025-02-08 12:21:05",jav,http://seisei.local:8999/jav/test/,en,,23
+11,ttl_test(jp),"<!-- wp:paragraph {""translatedWithWPMLTM"":""1""} -->
+<p>text_test(jp)</p>
+<!-- /wp:paragraph -->",,"2025-02-08 12:21:05",jav,http://seisei.local:8999/ja/jav/test/,ja,en,23
