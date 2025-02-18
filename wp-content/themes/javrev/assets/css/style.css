@@ -421,6 +421,12 @@ pre {
   background-repeat: no-repeat;
   background-position: center;
 }
+@media (min-width: 1024px) {
+  .icon__ratesmall .stars .star {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}
 .icon__ratesmall .stars .star.star-filled {
   background-image: url("../img/common/icon-starfill.svg");
 }
@@ -434,6 +440,13 @@ pre {
   .icon__ratesmall .average-score {
     font-size: 1.5rem;
   }
+}
+.icon__ratesmall.large .stars .star {
+  width: clamp(36px*0.5, 36/750*100vw, 3.6rem*0.6);
+  height: clamp(36px*0.5, 36/750*100vw, 3.6rem*0.6);
+}
+.icon__ratesmall.large .average-score {
+  font-size: clamp(26px*0.5, 26/750*100vw, 2.6rem*0.6);
 }
 
 .icon__helpwrap {
@@ -1646,7 +1659,7 @@ pre {
 .btn__tag {
   display: flex;
   flex-wrap: wrap;
-  font-size: clamp(26px*0.5, 26/750*100vw, 2.6rem*0.6);
+  font-size: clamp(22px*0.5, 22/750*100vw, 2.2rem*0.6);
   gap: 4px;
   list-style: none;
 }
@@ -1812,6 +1825,7 @@ pre {
   content: ", ";
   display: inline-block;
   margin-right: 0.35em;
+  margin-left: 0.2em;
 }
 .btn__tagtext li:last-of-type:after {
   content: none;
@@ -1828,7 +1842,7 @@ pre {
 }
 @media (min-width: 1024px) {
   .btn__tagtext.large {
-    font-size: clamp(13px, 15/1440*100vw, 1.5rem);
+    font-size: clamp(13px, 14/1440*100vw, 1.4rem);
   }
 }
 

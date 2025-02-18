@@ -124,8 +124,6 @@ add_filter('wpseo_schema_webpage', function ($data) {
 
 
 
-
-
 // ✅ `/jav/tags/` の構造化データを `ItemList` に修正
 // 📌 あとで！
 // add_filter('wpseo_schema_graph_pieces', function ($pieces, $context) {

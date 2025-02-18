@@ -1,5 +1,15 @@
-<article class="card__normal">
-  <a href="https://yahoo.co.jp" target="_blank" class="link">
+<?php
+// カードのバージョン（例：small）
+$class = $args['class'] ?? '';
+// 動画の再生時間を取得
+$playtime_data = get_playtime(get_the_ID());
+// 定義したtaxonomy_dataを取得
+$taxonomy_data  = $args['taxonomy_data'] ?? [];
+// 任意のタクソノミーループを作成
+$ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 'outfit', 'genre', 'cast'];
+?>
+<article class="card__normal <?php echo esc_attr($class); ?>">
+  <a href="<?php the_permalink(); ?>" target="_blank" class="link">
     <div class="mainsliderwrap">
       <div class="swiper mainslider">
         <div class="swiper-wrapper">
@@ -13,15 +23,20 @@
             <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/4.jpg" alt="画像3">
           </div>
         </div>
-        <div class="quality">
-          <ul class="btn__tag radius-first-last">
-            <li class="tag black alpha">HD</li>
-            <li class="tag black alpha">VR</li>
-          </ul>
-        </div>
+        <?php if (!empty($taxonomy_data['format'])) : ?>
+          <div class="quality">
+            <ul class="btn__tag radius-first-last">
+              <?php foreach ($taxonomy_data['format'] as $term) : ?>
+                <li class="tag black alpha"><?php echo esc_html($term['name']); ?></li>
+              <?php endforeach; ?>
+            </ul>
+          </div>
+        <?php endif; ?>
         <div class="playtime">
           <ul class="btn__tag radius-first-last">
-            <li class="tag black alpha pointer-events-none" data-duration="PT12M1S">12:01</li>
+            <li class="tag black alpha pointer-events-none" data-duration="<?php echo esc_attr($playtime_data['iso']); ?>">
+              <?php echo esc_html($playtime_data['formatted']); ?>
+            </li>
           </ul>
         </div>
       </div>
@@ -38,7 +53,7 @@
           <?php echo date_i18n(get_option('date_format'), strtotime(get_the_date())); ?>
         </time>
       </div>
-      <h3 class="ttl">あああSNSで話題の美人アスリートに直撃してみようかなとか考えた。未だ知らない、鈴木ナナの真相に迫る！</h3>
+      <h3 class="ttl"><?php the_title(); ?></h3>
       <div class="tmbsliderwrap">
         <div class="swiper tmbslider">
           <div class="swiper-wrapper">
@@ -56,16 +71,15 @@
       </div>
       <nav class="tagwrap" aria-label="タグリスト">
         <ul class="btn__tagtext large">
-          <li>テスト</li>
-          <li>タグのテスト</li>
-          <li>アスリート</li>
-          <li>筋肉</li>
-          <li>SNS</li>
-          <li>話題性抜群</li>
-          <li>炎上</li>
-          <li>芸能人</li>
-          <li>美人アスリート</li>
+          <?php foreach ($ordered_taxonomies as $taxonomy) : ?>
+            <?php if (!empty($taxonomy_data[$taxonomy])) : ?>
+              <?php foreach ($taxonomy_data[$taxonomy] as $term) : ?>
+                <li><?php echo esc_html($term['name']); ?></li>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          <?php endforeach; ?>
         </ul>
+
       </nav>
       <div class="btn__normal pri w87--sp">
         <button class="btn" type="button" onclick="location.href='#'">もっと見る</button>

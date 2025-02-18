@@ -1,7 +1,13 @@
 <?php get_header(); ?>
 <?php
-// 関数を呼び出してデータを取得
+// AFFの関数を呼び出してデータを取得
 $affiliate_info = get_affiliate_info();
+// 動画の再生時間を取得
+$playtime_data = get_playtime(get_the_ID());
+// 現在の投稿IDのタクソノミーを取得
+$taxonomy_data = jav_get_post_taxonomies(get_the_ID());
+// 任意のタクソノミーループを作成
+$ordered_taxonomies = ['censor', 'format', 'playtime'];
 ?>
 <?php
 if (function_exists('yoast_breadcrumb')) {
@@ -79,12 +85,12 @@ if (function_exists('yoast_breadcrumb')) {
         </div>
       <?php endif; ?>
       <section class="list__meta">
-        <div class="list__metabox">
+        <div class="list__metabox list__metabox-overview">
           <div class="inner-layout">
             <h2 class="ttlmetasmall icon__normal before gray-light video mb0"><?php echo lang('article.meta-sec-ttl'); ?></h2>
           </div>
         </div>
-        <div class="list__metabox">
+        <div class="list__metabox list__metabox-title">
           <div class="inner-layout">
             <div class="collayoutwrap">
               <div class="collayout js--applyleftwidth">
@@ -153,99 +159,38 @@ if (function_exists('yoast_breadcrumb')) {
             ?>
           </div>
         </div>
-        <div class="list__metabox">
+        <div class="list__metabox list__metabox-videoinfo">
           <div class="inner-layout">
             <h4 class="ttlmetasmall"><?php echo lang('article.meta-video-info'); ?></h4>
             <nav class="tagwrap" aria-label="<?php echo lang('article.meta-video-info-tags'); ?>">
-              <?php
-              // 投稿のカスタムタクソノミータームを取得する関数
-              function get_taxonomy_terms_list($post_id, $taxonomy)
-              {
-                $terms = get_the_terms($post_id, $taxonomy);
-                if ($terms && !is_wp_error($terms)) {
-                  return array_map(function ($term) {
-                    return [
-                      'name' => esc_html($term->name),
-                      'slug' => esc_attr($term->slug),
-                      'url' => get_term_link($term) // タームのURL
-                    ];
-                  }, $terms);
-                }
-                return [];
-              }
-
-              // 投稿IDを取得
-              $post_id = get_the_ID();
-
-              // 3つのカスタムタクソノミーのタームを取得
-              $censor_terms = get_taxonomy_terms_list($post_id, 'censor'); // 検閲・規制
-              $format_terms = get_taxonomy_terms_list($post_id, 'format'); // 映像形式
-              $playtime_terms = get_taxonomy_terms_list($post_id, 'playtime'); // 再生時間
-
-              // すべてのタームを結合（表示順: censor → format → playtime）
-              $all_terms = array_merge($censor_terms, $format_terms, $playtime_terms);
-              ?>
-
-              <?php if (!empty($all_terms)) : ?>
-                <ul class="btn__tag fixedsize--pc">
-                  <?php foreach ($all_terms as $term) : ?>
-                    <li><a href="<?php echo esc_url($term['url']); ?>" class="tag tag-<?php echo $term['slug']; ?>"><?php echo $term['name']; ?></a></li>
-                  <?php endforeach; ?>
-                </ul>
-              <?php endif; ?>
+              <ul class="btn__tag fixedsize--pc">
+                <?php foreach ($ordered_taxonomies as $taxonomy) : ?>
+                  <?php if (!empty($taxonomy_data[$taxonomy])) : ?>
+                    <?php foreach ($taxonomy_data[$taxonomy] as $term) : ?>
+                      <li><a href="<?php echo esc_url($term['link']); ?>" class="tag tag-<?php echo esc_html($term['slug']); ?>"><?php echo esc_html($term['name']); ?></a></li>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </ul>
             </nav>
-            <?php
-            // ACF から再生時間を取得（例: "01:00:20" または "00:45:00"）
-            $playtime = get_field('acf_playtime');
-
-            if ($playtime) {
-              // 時間・分・秒を分解
-              list($hours, $minutes, $seconds) = explode(':', $playtime);
-
-              $hours = (int)$hours;
-              $minutes = (int)$minutes;
-              $seconds = (int)$seconds;
-
-              // `datetime` 用 ISO 8601 フォーマット（PTxxHxxMxxS）
-              $iso_playtime = 'PT';
-              if ($hours > 0) $iso_playtime .= "{$hours}H";
-              if ($minutes > 0) $iso_playtime .= "{$minutes}M";
-              if ($seconds > 0) $iso_playtime .= "{$seconds}S";
-
-              // もし全てゼロだったら、デフォルトで `PT0S` にする
-              if ($iso_playtime === 'PT') {
-                $iso_playtime = 'PT0S';
-              }
-
-              // `HH:MM:SS` 形式で統一
-              $localized_playtime = sprintf("%d:%02d:%02d", $hours, $minutes, $seconds);
-            }
-            ?>
-            <time class="playtime" datetime="<?php echo esc_attr($iso_playtime); ?>"><?php echo lang('article.meta-playtime'); ?> : <?php echo esc_html($localized_playtime); ?></time>
+            <time class="playtime" datetime="<?php echo esc_attr($playtime_data['iso']); ?>">
+              <?php echo lang('article.meta-playtime'); ?> : <?php echo esc_html($playtime_data['formatted']); ?>
+            </time>
           </div>
         </div>
-        <div class="list__metabox">
+        <div class="list__metabox .list__metabox-cast">
           <div class="inner-layout">
             <h4 class="ttlmetasmall"><?php echo lang('article.meta-cast'); ?></h4>
             <nav class="tagwrap" aria-label="<?php echo lang('article.meta-cast-list--aria'); ?>">
               <ul class="btn__tag fixedsize--pc">
-                <?php
-                // 出演者（cast）のタームを取得
-                $terms = get_the_terms(get_the_ID(), 'cast');
-                if ($terms && !is_wp_error($terms)) :
-                  foreach ($terms as $term) :
-                    $term_link = get_term_link($term);
-                ?>
-                    <li><a href="<?php echo esc_url($term_link); ?>" class="tag"><?php echo esc_html($term->name); ?></a></li>
-                <?php
-                  endforeach;
-                endif;
-                ?>
+                <?php foreach ($taxonomy_data['cast'] as $term) : ?>
+                  <li><a href="<?php echo esc_url($term['link']); ?>" class="tag"><?php echo esc_html($term['name']); ?></a></li>
+                <?php endforeach; ?>
               </ul>
             </nav>
           </div>
         </div>
-        <div class="list__metabox">
+        <div class="list__metabox list__metabox-price">
           <div class="inner-layout">
             <h4 class="ttlmetasmall"><?php echo lang('article.meta-pricing'); ?></h4>
             <?php if (!empty($affiliate_info['pricing_list'])) : ?>
@@ -267,7 +212,7 @@ if (function_exists('yoast_breadcrumb')) {
             <?php endif; ?>
           </div>
         </div>
-        <div class="list__metabox">
+        <div class="list__metabox list__metabox-tags">
           <div class="inner-layout">
             <h4 class="ttlmetasmall"><?php echo lang('article.meta-tags'); ?></h4>
             <nav class="tagwrap" aria-label="<?php echo lang('article.meta-tags--aria'); ?>">
@@ -311,104 +256,6 @@ if (function_exists('yoast_breadcrumb')) {
             <?php the_content(); ?>
           <?php endwhile; ?>
         <?php endif; ?>
-
-
-        <!-- the_content 中身 後で記事に入力-->
-        <!--<section class="sec">
-          <h2>吾輩は猫である</h2>
-          <p>吾輩わがはいは猫である。名前はまだ無い。どこで生れたかとんと見当けんとうがつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。</p>
-          <section class="conversation">
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
-                </span>
-                <figcaption>男優</figcaption>
-              </figure>
-              <p>リリちゃん素敵です！めちゃくちゃ可愛い発言連発ですね！</p>
-            </div>
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/0/1/icon.jpg" alt="リリちゃんのアイコン">
-                </span>
-                <figcaption>リリちゃん</figcaption>
-              </figure>
-              <p>わー！ありがとう😊</p>
-            </div>
-          </section>
-          <p>吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪どうあくな種族であったそうだ。この書生というのは時々我々を捕つかまえて煮にて食うという話である。</p>
-          <div class="img js--contain-img">
-            <img src="/img/0/1/7.jpg" alt="">
-          </div>
-          [aff_cta]
-        </section>
-        <section class="sec">
-          <h2>しかしその当時は何という考もなかったから別段恐しい</h2>
-          <p>ただ彼の掌てのひらに載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ちついて書生の顔を見たのがいわゆる人間というものの見始みはじめであろう。</p>
-          <section class="conversation">
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
-                </span>
-                <figcaption>男優</figcaption>
-              </figure>
-              <p>どーしてそんなに可愛いの？？笑</p>
-            </div>
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/0/1/icon.jpg" alt="リリちゃんのアイコン">
-                </span>
-                <figcaption>リリちゃん</figcaption>
-              </figure>
-              <p>可愛いですか…？<br>なんでしょーね🤔</p>
-            </div>
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
-                </span>
-                <figcaption>男優</figcaption>
-              </figure>
-              <p>自覚なしかよッ！笑笑笑</p>
-            </div>
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/0/1/icon.jpg" alt="リリちゃんのアイコン">
-                </span>
-                <figcaption>リリちゃん</figcaption>
-              </figure>
-              <p>そういうお兄さんも格好良いです😊❤️</p>
-            </div>
-            <div class="dialog">
-              <figure>
-                <span class="iconwrap">
-                  <img src="/img/common/icon-actor.png" alt="男優のアイコン">
-                </span>
-                <figcaption>男優</figcaption>
-              </figure>
-              <p>ぐはッ……！！！</p>
-            </div>
-          </section>
-          <p>ただ彼の掌てのひらに載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ちついて書生の顔を見たのがいわゆる人間というものの見始みはじめであろう。</p>
-          <div class="img col2 js--contain-img">
-            <figure>
-              <img src="/img/0/1/9.jpg" alt="">
-              <figcaption>キャプションは必ず存在します</figcaption>
-            </figure>
-            <figure>
-              <img src="/img/0/1/5.jpg" alt="">
-              <figcaption>キャプションは必ず存在します</figcaption>
-            </figure>
-          </div>
-        </section>-->
-        <!-- END the_content 中身 後で記事に入力-->
-
-
-
       </div>
     </section>
     <footer class="article__footer layout__padding">

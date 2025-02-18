@@ -42,14 +42,14 @@
         <p class="text">日本動画を真面目にレビューしました。</p>
       </div>
       <?php get_template_part('assets/inc/parts/btn__query'); ?>
-      <div class="card__normalwrap">
-        <?php get_template_part('assets/inc/dev/card1'); ?>
-        <?php get_template_part('assets/inc/dev/card2'); ?>
-        <?php get_template_part('assets/inc/dev/card3'); ?>
-        <?php get_template_part('assets/inc/dev/card4'); ?>
-        <?php get_template_part('assets/inc/dev/card5'); ?>
-        <?php get_template_part('assets/inc/dev/card6'); ?>
-      </div>
+      <?php
+      get_card_loop([
+        'post_type'      => 'jav',
+        'posts_per_page' => 3,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+      ]);
+      ?>
     </div>
   </section>
   <?php get_template_part('assets/inc/parts/list__pagination'); ?>

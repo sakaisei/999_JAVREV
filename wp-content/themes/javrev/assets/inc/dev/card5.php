@@ -27,9 +27,11 @@
     </div>
     <div class="inner-layout-card">
       <div class="layoutcol2">
-        <div class="icon__rate" data-rating="3.5">
-          <span class="average-score">3.5</span>
-          <div class="stars"></div>
+        <div class="icon__ratesmall large">
+          <div class="stars">
+            <span class="star star-filled"></span>
+          </div>
+          <span class="average-score">3.6</span>
         </div>
         <time datetime="<?php echo get_the_date('c'); ?>">
           <?php echo date_i18n(get_option('date_format'), strtotime(get_the_date())); ?>

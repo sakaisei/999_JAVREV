@@ -294,8 +294,8 @@
       background-repeat: no-repeat;
       background-position: center;
       @include media(pc) {
-        // width: min(18/1440*100vw, 1.8rem);
-        // height: min(18/1440*100vw, 1.8rem);
+        width: 1.8rem;
+        height: 1.8rem;
       }
       &.star-filled {
         background-image: url('../img/common/icon-starfill.svg');
@@ -309,6 +309,18 @@
     margin-top: 0.15em;
     @include media(pc) {
       font-size: 1.5rem;
+    }
+  }
+  // 別パターン
+  &.large {
+    .stars {
+      .star {
+        width: clamp(36px*0.5, 36/750*100vw, 3.6rem*0.6);
+        height: clamp(36px*0.5, 36/750*100vw, 3.6rem*0.6);
+      }
+    }
+    .average-score {
+      font-size: clamp(26px*0.5, 26/750*100vw, 2.6rem*0.6);
     }
   }
 }

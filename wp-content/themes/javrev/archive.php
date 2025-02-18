@@ -41,22 +41,30 @@ if (function_exists('yoast_breadcrumb')) {
 
 
 
-        <p>
+        <p class="text">
           <?php
 
-if (is_archive()) {
-    error_log('✅ is_archive() detected!');
-}
+          add_action('wp_footer', function () {
+            if (is_singular() || is_tax() || is_archive()) {
+              echo '<pre>Permalink: ' . get_permalink() . '</pre>';
+            }
+          });
 
-if (is_post_type_archive('jav')) {
-    error_log('✅ is_post_type_archive("jav") detected!');
-}
 
-if (is_tax('format')) {
-    error_log('✅ is_tax("format") detected!');
-}
 
-error_log('Current Query Vars: ' . print_r($wp_query->query_vars, true));
+          // if (is_archive()) {
+          //     error_log('✅ is_archive() detected!');
+          // }
+
+          // if (is_post_type_archive('jav')) {
+          //     error_log('✅ is_post_type_archive("jav") detected!');
+          // }
+
+          // if (is_tax('format')) {
+          //     error_log('✅ is_tax("format") detected!');
+          // }
+
+          // error_log('Current Query Vars: ' . print_r($wp_query->query_vars, true));
 
           ?>
         </p>
