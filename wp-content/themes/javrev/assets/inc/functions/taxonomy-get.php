@@ -1,6 +1,6 @@
 <?php
 
-function jav_get_post_taxonomies($post_id)
+function get_all_taxonomies($post_id)
 {
   $post_type      = get_post_type($post_id);
   $taxonomy_slugs = get_object_taxonomies($post_type, 'names');
@@ -27,5 +27,3 @@ function jav_get_post_taxonomies($post_id)
 
   return $taxonomy_data;
 }
-
-?>

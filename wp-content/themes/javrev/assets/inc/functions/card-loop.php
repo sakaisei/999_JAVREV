@@ -16,7 +16,7 @@ function get_card_loop($args = [], $class = '', $wrap_class = '')
   if ($query->have_posts()) :
     echo '<div class="card__normalwrap ' . esc_attr($wrap_class) . '">';
     while ($query->have_posts()) : $query->the_post();
-      $taxonomy_data = jav_get_post_taxonomies(get_the_ID()); // タクソノミー取得
+      $taxonomy_data = get_all_taxonomies(get_the_ID()); // タクソノミー取得
 
       get_template_part('assets/inc/parts/card__normal', null, [
         'class'         => $class,

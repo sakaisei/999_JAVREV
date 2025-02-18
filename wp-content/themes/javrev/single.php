@@ -5,9 +5,11 @@ $affiliate_info = get_affiliate_info();
 // 動画の再生時間を取得
 $playtime_data = get_playtime(get_the_ID());
 // 現在の投稿IDのタクソノミーを取得
-$taxonomy_data = jav_get_post_taxonomies(get_the_ID());
+$taxonomy_data = get_all_taxonomies(get_the_ID());
 // 任意のタクソノミーループを作成
 $ordered_taxonomies = ['censor', 'format', 'playtime'];
+// 任意のタクソノミーループを作成　2
+$ordered_taxonomies2 = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 'outfit', 'genre', 'cast'];
 ?>
 <?php
 if (function_exists('yoast_breadcrumb')) {
@@ -21,6 +23,7 @@ if (function_exists('yoast_breadcrumb')) {
         <div class="inner-layout layout__article">
           <div class="stats">
             <div class="btn__small good">
+              <!--検証中、本番環境で検証する-->
               <?php
               // 翻訳グループ内の「いいね」数を表示
               //display_likes_by_translation_group();
@@ -30,6 +33,7 @@ if (function_exists('yoast_breadcrumb')) {
                                           ?></div>
             <div class="btn__small view"><?php // echo do_shortcode('[post-views]'); 
                                           ?></div>
+            <!--END 検証中、本番環境で検証する-->
             <time datetime="<?php echo get_the_date('c'); ?>">
               <?php echo date_i18n(get_option('date_format'), strtotime(get_the_date())); ?>
             </time>
@@ -184,7 +188,9 @@ if (function_exists('yoast_breadcrumb')) {
             <nav class="tagwrap" aria-label="<?php echo lang('article.meta-cast-list--aria'); ?>">
               <ul class="btn__tag fixedsize--pc">
                 <?php foreach ($taxonomy_data['cast'] as $term) : ?>
-                  <li><a href="<?php echo esc_url($term['link']); ?>" class="tag"><?php echo esc_html($term['name']); ?></a></li>
+                  <li>
+                    <a href="<?php echo esc_url($term['link']); ?>" class="tag"><?php echo esc_html($term['name']); ?></a>
+                  </li>
                 <?php endforeach; ?>
               </ul>
             </nav>
@@ -216,34 +222,17 @@ if (function_exists('yoast_breadcrumb')) {
           <div class="inner-layout">
             <h4 class="ttlmetasmall"><?php echo lang('article.meta-tags'); ?></h4>
             <nav class="tagwrap" aria-label="<?php echo lang('article.meta-tags--aria'); ?>">
-              <?php
-              // 対象のカスタムタクソノミー
-              $taxonomies = ['genre', 'outfit', 'girl', 'guy', 'body', 'rel', 'scene', 'play'];
-              // 空の配列を用意して、タームを格納
-              $terms_list = [];
-              foreach ($taxonomies as $taxonomy) {
-                // 投稿に紐づいているタームを取得
-                $terms = get_the_terms(get_the_ID(), $taxonomy);
-                // 取得できた場合、リストに追加
-                if ($terms && !is_wp_error($terms)) {
-                  foreach ($terms as $term) {
-                    $terms_list[] = [
-                      'name' => $term->name,
-                      'slug' => $term->slug,
-                      'link' => get_term_link($term)
-                    ];
-                  }
-                }
-              }
-              // タームが存在する場合のみ出力
-              if (!empty($terms_list)) :
-              ?>
-                <ul class="btn__tag fixedsize--pc">
-                  <?php foreach ($terms_list as $term) : ?>
-                    <li><a href="<?php echo esc_url($term['link']); ?>" class="tag"><?php echo esc_html($term['name']); ?></a></li>
-                  <?php endforeach; ?>
-                </ul>
-              <?php endif; ?>
+              <ul class="btn__tag fixedsize--pc">
+                <?php foreach ($ordered_taxonomies2 as $taxonomy) : ?>
+                  <?php if (!empty($taxonomy_data[$taxonomy])) : ?>
+                    <?php foreach ($taxonomy_data[$taxonomy] as $term) : ?>
+                      <li>
+                        <a href="<?php echo esc_url($term['link']); ?>" class="tag"><?php echo esc_html($term['name']); ?></a>
+                      </li>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </ul>
             </nav>
           </div>
         </div>

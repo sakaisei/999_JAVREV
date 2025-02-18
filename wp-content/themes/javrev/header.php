@@ -70,10 +70,10 @@
       <div class="layouttop">
         <ul class="btn__query gnav">
           <li>
-            <a href="/filtering/" class="icon__normal before filter white">好きな条件で探す</a>
+            <a href="/filtering/" class="icon__normal before filter gray-2">好きな条件で探す</a>
           </li>
           <li>
-            <a href="/tag/" class="icon__normal before tag white">好きなタグで探す</a>
+            <a href="/tag/" class="icon__normal before tag gray-2">好きなタグで探す</a>
           </li>
         </ul>
         <button class="closebtn" aria-label="サブナビゲーションを閉じる"></button>

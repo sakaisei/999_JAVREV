@@ -10,6 +10,7 @@ $function_files = [
   'shortcode.php', // ショートコード (一般)
   'shortcode_cta.php',// CTA 用ショートコード
   'card-loop.php', // カードループ
+  'slider-functions.php', // カードのswiper箇所の関数
   'wp_ulike.php', // いいね機能
   'yoast-seo.php', // Yoast SEO 設定
   'affiliate_info.php', // アフィリエイト情報

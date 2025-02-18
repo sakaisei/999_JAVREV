@@ -595,7 +595,8 @@
     a {
       display: flex;
       align-items: center;
-      border: solid 1px colors(white);
+      border: solid 1px colors(gray-dark);
+      color: colors(gray);
       border-radius: 5px;
       padding: 0.5em 0.75em;
     }

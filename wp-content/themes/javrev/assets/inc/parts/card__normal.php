@@ -13,15 +13,7 @@ $ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 
     <div class="mainsliderwrap">
       <div class="swiper mainslider">
         <div class="swiper-wrapper">
-          <div class="swiper-slide mainslider-slide">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/3.jpg" alt="画像3">
-          </div>
-          <div class="swiper-slide mainslider-slide">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/2.jpg" alt="画像2">
-          </div>
-          <div class="swiper-slide mainslider-slide">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/4.jpg" alt="画像3">
-          </div>
+          <?php get_slider_images('mainslider'); ?>
         </div>
         <?php if (!empty($taxonomy_data['format'])) : ?>
           <div class="quality">
@@ -47,7 +39,7 @@ $ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 
           <div class="stars">
             <span class="star star-filled"></span>
           </div>
-          <span class="average-score">3.6</span>
+          <span class="average-score"><?php echo esc_html(get_field('acf_video_rating')); ?></span>
         </div>
         <time datetime="<?php echo get_the_date('c'); ?>">
           <?php echo date_i18n(get_option('date_format'), strtotime(get_the_date())); ?>
@@ -57,15 +49,7 @@ $ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 
       <div class="tmbsliderwrap">
         <div class="swiper tmbslider">
           <div class="swiper-wrapper">
-            <div class="swiper-slide tmbslider-slide">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/3.jpg" alt="画像3">
-            </div>
-            <div class="swiper-slide tmbslider-slide">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/2.jpg" alt="画像2">
-            </div>
-            <div class="swiper-slide tmbslider-slide">
-              <img src="<?php echo get_template_directory_uri(); ?>/assets/img/dev/4.jpg" alt="画像3">
-            </div>
+            <?php get_slider_images('tmbslider'); ?>
           </div>
         </div>
       </div>
@@ -79,7 +63,6 @@ $ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 
             <?php endif; ?>
           <?php endforeach; ?>
         </ul>
-
       </nav>
       <div class="btn__normal pri w87--sp">
         <button class="btn" type="button" onclick="location.href='#'">もっと見る</button>
