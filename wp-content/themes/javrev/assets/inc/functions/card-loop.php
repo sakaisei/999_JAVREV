@@ -4,7 +4,7 @@ function get_card_loop($args = [], $class = '', $wrap_class = '')
 {
   $defaults = [
     'post_type'      => 'jav',
-    'posts_per_page' => 3,
+    'posts_per_page' => 2,
     'orderby'        => 'date',
     'order'          => 'DESC',
     'paged'          => get_query_var('paged', 1)
@@ -49,8 +49,6 @@ function get_card_loop($args = [], $class = '', $wrap_class = '')
 
 
 
-
-
 // 使い方 => 各テンプレートで以下のように使用する
 ///////////////////////
 // get_card_loop([
@@ -67,5 +65,3 @@ function get_card_loop($args = [], $class = '', $wrap_class = '')
 //   'orderby' => 'date',
 //   'order' => 'DESC',
 // ], 'small', 'col2');
-
-?>
