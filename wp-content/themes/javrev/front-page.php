@@ -45,7 +45,7 @@
       <?php
       get_card_loop([
         'post_type'      => 'jav',
-        'posts_per_page' => 3,
+        'posts_per_page' => 4,
         'orderby'        => 'date',
         'order'          => 'DESC',
       ]);

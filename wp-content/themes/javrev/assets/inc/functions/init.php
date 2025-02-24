@@ -81,7 +81,7 @@ function remove_menus() {
 //remove_submenu_page('index.php','index.php');//ダッシュボード>ホーム
 //remove_submenu_page('index.php','update-core.php');//ダッシュボード>更新
 //remove_menu_page('separator1');//セパレータ1
-//remove_menu_page('edit.php');//投稿
+remove_menu_page('edit.php');//投稿
 //remove_submenu_page('edit.php','edit.php');//投稿>投稿一覧
 //remove_submenu_page('edit.php','post-new.php');//投稿>新規投稿
 //remove_submenu_page('edit.php','edit-tags.php?taxonomy=category');//投稿>カテゴリー
@@ -123,55 +123,6 @@ function remove_menus() {
 }
 // 管理画面メニューの変更を行うフックを設定
 add_action('admin_menu', 'remove_menus');
-
-// ユーザー名が "kow" の管理画面メニューをカスタマイズ
-// add_action('admin_menu', 'remove_kow_menus');
-// function remove_kow_menus() {
-//   global $current_user;
-//   $current_user = wp_get_current_user();
-  
-//   if ($current_user->user_login == "kow") {
-//     remove_menu_page('index.php');                  // ダッシュボードを隠します
-//     remove_menu_page('edit.php');                   // 投稿メニューを隠します
-//     remove_menu_page('upload.php');                 // メディアを隠します
-//     remove_menu_page('edit.php?post_type=page');    // ページ追加を隠します
-//     remove_menu_page('edit-comments.php');          // コメントメニューを隠します
-//     remove_menu_page('themes.php');                 // 外観メニューを隠します
-//     remove_menu_page('plugins.php');                // プラグインメニューを隠します
-//     remove_menu_page('tools.php');                  // ツールメニューを隠します
-//     remove_menu_page('options-general.php');        // 設定メニューを隠します
-//     remove_menu_page('users.php');                  // ユーザーメニューを隠します
-//   }
-// }
-
-// title要素用
-function my_wp_title($title) {
-  if( is_front_page() && is_home() ){
-    return get_bloginfo('name');
-  } else {
-    return $title."|". get_bloginfo('name');
-  }
-}
-add_filter( 'wp_title', 'my_wp_title');
-
-// 日付の出力
-function smart_entry_date() {
-  // 日付
-  printf( '<time class="entry-date published" datetime="%1$s">%2$s</time>',
-    esc_attr( get_the_date( ) ),
-    get_the_date()
-  );
-}
-
-// カテゴリの出力
-function smart_entry_category($pretag="", $endtag="") {
-  $categories_list = get_the_category_list( ', ' );
-  if ( $categories_list ) {
-    printf( $pretag.'%1$s'.$endtag,
-      $categories_list
-   );
-  }
-}
 
 // body_classにスラッグ追加
 add_filter( 'body_class', 'add_page_slug_class_name' );
@@ -262,5 +213,3 @@ add_theme_support( 'post-thumbnails' );
 //   return $slug;
 // }
 // add_filter( 'wp_unique_post_slug', 'auto_slug_setting', 10, 4 );
-
-?>

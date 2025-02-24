@@ -12,6 +12,7 @@ $function_files = [
   'card-loop.php', // カードループ
   'slider-functions.php', // カードのswiper箇所の関数
   'wp_ulike.php', // いいね機能
+  //'sync_wpml_slug.php', // WPMLのスラッグを元の言語のものに強制的に統一
   'yoast-seo.php', // Yoast SEO 設定
   'affiliate_info.php', // アフィリエイト情報
   'flush_rewrite_rules.php' // 最後にリライトルールをフラッシュ

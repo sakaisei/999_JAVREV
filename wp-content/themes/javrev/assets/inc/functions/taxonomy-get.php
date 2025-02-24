@@ -1,6 +1,26 @@
 <?php
 
-function get_all_taxonomies($post_id)
+/**
+ * 指定した投稿タイプのすべてのタクソノミーを取得
+ * 
+ * @param string $post_type 投稿タイプ（例: 'jav'）
+ * @return array タクソノミーリスト（タクソノミー名の配列）
+ */
+function get_all_taxonomies($post_type = '')
+{
+  if (empty($post_type)) {
+    return [];
+  }
+  return get_object_taxonomies($post_type, 'names');
+}
+
+/**
+ * 指定した投稿のタクソノミーとターム情報を取得
+ * 
+ * @param int $post_id 投稿ID
+ * @return array タクソノミーとターム情報（`name`, `slug`, `link`）
+ */
+function get_post_taxonomies_and_terms($post_id)
 {
   $post_type      = get_post_type($post_id);
   $taxonomy_slugs = get_object_taxonomies($post_type, 'names');

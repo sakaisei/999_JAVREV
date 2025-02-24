@@ -310,30 +310,54 @@ window.addEventListener('resize', applyLeftColumnWidth);
 document.addEventListener('DOMContentLoaded', function () {
   const slides = document.querySelectorAll('.js--contain-img'); // 画像を含むスライドを取得
 
-  slides.forEach((slide) => {
+  slides.forEach(processSlide); // 初回処理
+
+  function processSlide(slide) {
     const img = slide.querySelector('img'); // スライド内の画像を取得
+    if (!img) return;
 
-    if (img) {
-      if (img.complete) {
-        processImageAspect(img);
-      } else {
-        img.onload = function () {
-          processImageAspect(img);
-        };
-      }
-    }
-  });
-
-  // 画像のアスペクト比のみを基準に判定
-  function processImageAspect(img) {
-    const imageAspectRatio = img.naturalWidth / img.naturalHeight; // 画像のアスペクト比
-
-    // 任意のアスペクト比基準で縦長画像を判定
-    if (imageAspectRatio < 1) { // アスペクト比が1未満なら縦長と判定
-      img.classList.add('is--contain');
+    if (img.complete) {
+      processImageAspect(img, slide);
+    } else {
+      img.onload = function () {
+        processImageAspect(img, slide);
+      };
     }
   }
+
+  function processImageAspect(img, slide) {
+    const imageAspectRatio = img.naturalWidth / img.naturalHeight; // 画像のアスペクト比
+    const imageUrl = img.src; // 画像のURLを取得
+
+    if (imageAspectRatio < 1) { // アスペクト比が1未満なら縦長と判定
+      img.classList.add('is--contain');
+      slide.classList.add('is--containwrap'); // 親にもクラスを付与
+      slide.style.backgroundImage = `url('${imageUrl}')`; // 動的に背景画像をセット
+    } else {
+      img.classList.remove('is--contain');
+      slide.classList.remove('is--containwrap');
+      slide.style.backgroundImage = ''; // 背景画像をリセット
+    }
+  }
+
+  // **動的に追加されるスライドにも対応**
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1 && node.classList.contains('js--contain-img')) {
+          processSlide(node); // 新しいスライドが追加されたら処理
+        }
+      });
+    });
+  });
+
+  observer.observe(document.querySelector('.swiper-wrapper'), {
+    childList: true,
+    subtree: false,
+  });
 });
+
+
 
 // ツールチップ
 // ==============================

@@ -18,7 +18,7 @@
     <p class="footer__copyright">&copy; <?php echo date('Y'); ?> javrev.info</p>
   </div>
 </footer>
-<?php wp_footer();?>
+<?php wp_footer(); ?>
 <style>
   #query-monitor-main:not(.qm-show-right),
   .otgs-development-site-front-end {
@@ -26,5 +26,7 @@
   }
 </style>
 </body>
+
 </html>
-<?php// get_template_part('assets/inc/dev/dev'); ?>
+<? php // get_template_part('assets/inc/dev/dev'); 
+?>

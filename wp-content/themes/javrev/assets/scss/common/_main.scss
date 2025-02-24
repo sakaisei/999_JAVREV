@@ -7,6 +7,9 @@
   min-height: 100vh;
   min-height: 100dvh;
   //padding: 200px;
+  @include media(pc) {
+    min-height: auto;
+  }
   &.margin-top {
     margin-top: 52px;
     @include media(pc) {

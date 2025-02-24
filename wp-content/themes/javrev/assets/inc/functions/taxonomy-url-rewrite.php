@@ -4,8 +4,8 @@
 add_action('template_redirect', function () {
   global $wp_query;
 
-  // `jav` に紐づくすべてのカスタムタクソノミーを取得（動的）
-  $taxonomies = get_object_taxonomies('jav', 'names');
+  // `jav` のすべてのカスタムタクソノミーを取得（共通関数を利用）
+  $taxonomies = get_all_taxonomies('jav');
 
   // `playtime` や `format` などのトップページ（英語・多言語どちらも対象）
   if (

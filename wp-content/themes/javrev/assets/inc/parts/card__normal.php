@@ -7,13 +7,21 @@ $playtime_data = get_playtime(get_the_ID());
 $taxonomy_data  = $args['taxonomy_data'] ?? [];
 // 任意のタクソノミーループを作成
 $ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 'outfit', 'genre', 'cast'];
+// スライダーを取得
+$slider_images = get_slider_images_data();
 ?>
 <article class="card__normal <?php echo esc_attr($class); ?>">
-  <a href="<?php the_permalink(); ?>" target="_blank" class="link">
+  <a href="<?php the_permalink(); ?>" class="link">
     <div class="mainsliderwrap">
       <div class="swiper mainslider">
         <div class="swiper-wrapper">
-          <?php get_slider_images('mainslider'); ?>
+          <?php // get_slider_images('mainslider'); 
+          ?>
+          <?php foreach ($slider_images as $image) : ?>
+            <div class="swiper-slide mainslider-slide js--contain-img">
+              <img src="<?php echo esc_url($image['path']); ?>" alt="<?php echo esc_attr($image['alt']); ?>" loading="lazy">
+            </div>
+          <?php endforeach; ?>
         </div>
         <?php if (!empty($taxonomy_data['format'])) : ?>
           <div class="quality">
@@ -49,7 +57,13 @@ $ordered_taxonomies = ['censor', 'play', 'scene', 'rel', 'body', 'girl', 'guy', 
       <div class="tmbsliderwrap">
         <div class="swiper tmbslider">
           <div class="swiper-wrapper">
-            <?php get_slider_images('tmbslider'); ?>
+            <?php foreach ($slider_images as $image) : ?>
+              <div class="swiper-slide tmbslider-slide">
+                <img src="<?php echo esc_url($image['path']); ?>" alt="<?php echo esc_attr($image['alt']); ?>" loading="lazy">
+              </div>
+            <?php endforeach; ?>
+            <?php // get_slider_images('tmbslider'); 
+            ?>
           </div>
         </div>
       </div>

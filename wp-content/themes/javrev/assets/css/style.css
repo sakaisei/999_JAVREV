@@ -1220,9 +1220,11 @@ pre {
   position: relative;
 }
 .card__normal .mainslider-slide {
+  background: var(--black-light-2);
   aspect-ratio: 3/2;
   overflow: hidden;
   border-radius: clamp(30px*0.5, 30/750*100vw, 3rem*0.5) clamp(30px*0.5, 30/750*100vw, 3rem*0.5) 0 0;
+  position: relative;
 }
 @media (min-width: 1024px) {
   .card__normal .mainslider-slide {
@@ -1235,6 +1237,26 @@ pre {
   object-fit: cover;
   transition: 0.5s ease;
   transform: scale(1.01);
+  position: relative;
+  z-index: 2;
+}
+.card__normal .mainslider-slide img.is--contain {
+  object-fit: contain;
+}
+.card__normal .mainslider-slide.is--containwrap {
+  background-size: cover;
+  background-position: center center;
+}
+.card__normal .mainslider-slide.is--containwrap:after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.16);
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(15px);
 }
 .card__normal .inner-layout-card {
   padding: 1.5% 5% 8.5% 5%;
@@ -2353,9 +2375,26 @@ pre {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: relative;
+  z-index: 2;
 }
 .article__mainslider .swiper-slide img.is--contain {
   object-fit: contain;
+}
+.article__mainslider .swiper-slide.is--containwrap {
+  background-size: cover;
+  background-position: center center;
+}
+.article__mainslider .swiper-slide.is--containwrap:after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.16);
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(15px);
 }
 
 .article__tmbslider {
@@ -2395,6 +2434,7 @@ pre {
   align-items: center;
   justify-content: center;
   background: var(--black-light-2);
+  position: relative;
 }
 .article__tmbslider .swiper-slide.swiper-slide-thumb-active {
   opacity: 1;
@@ -2403,9 +2443,26 @@ pre {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: relative;
+  z-index: 2;
 }
 .article__tmbslider .swiper-slide img.is--contain {
   object-fit: contain;
+}
+.article__tmbslider .swiper-slide.is--containwrap {
+  background-size: cover;
+  background-position: center center;
+}
+.article__tmbslider .swiper-slide.is--containwrap:after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.16);
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(15px);
 }
 
 .article__mainslider-next,
@@ -3219,6 +3276,11 @@ button.wp_ulike_btn:disabled:active, .wpulike-default button.wp_ulike_btn:disabl
 .main__common {
   min-height: 100vh;
   min-height: 100dvh;
+}
+@media (min-width: 1024px) {
+  .main__common {
+    min-height: auto;
+  }
 }
 .main__common.margin-top {
   margin-top: 52px;

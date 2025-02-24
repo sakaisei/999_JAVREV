@@ -5,7 +5,7 @@ $affiliate_info = get_affiliate_info();
 // 動画の再生時間を取得
 $playtime_data = get_playtime(get_the_ID());
 // 現在の投稿IDのタクソノミーを取得
-$taxonomy_data = get_all_taxonomies(get_the_ID());
+$taxonomy_data = get_post_taxonomies_and_terms(get_the_ID());
 // 任意のタクソノミーループを作成
 $ordered_taxonomies = ['censor', 'format', 'playtime'];
 // 任意のタクソノミーループを作成　2
@@ -50,6 +50,18 @@ if (function_exists('yoast_breadcrumb')) {
       $article_no = get_field('acf_article_no'); // 記事番号
       $image_count = get_field('acf_slide_count'); // 画像の総枚数
       $image_alt_texts = explode("\n", get_field('acf_slide_alt')); // 改行で区切って配列化
+
+      // 画像の総数とaltテキストの数が一致しない場合、altを無効化
+      if (count($image_alt_texts) !== (int)$image_count) {
+        $image_alt_texts = array_fill(0, $image_count, ''); // 全てのaltを空文字に
+        // 管理者のみエラーメッセージを表示
+        if (is_user_logged_in() && current_user_can('manage_options')) {
+          echo '<div style="width: 220px;height: 150px;position: fixed;right: 20px;bottom: 20px; background: red;color: white;display: flex;align-items: center; justify-content: center;padding: 20px;font-size: 13px;line-height: 1.5; box-shadow: 0 2px 10px rgba(0,0,0,0.3);z-index: 9999;">
+          記事NO：' . esc_html($article_no) . '<br>
+          画像とaltの数が一致しません。
+          </div>';
+        }
+      }
 
       // 記事番号から画像ディレクトリのパスを生成
       $image_directory = "/img/" . floor($article_no / 100) . "/" . $article_no . "/";

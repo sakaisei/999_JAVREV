@@ -126,5 +126,3 @@ function move_jav_taxonomy_meta_boxes()
   }
 }
 add_action('add_meta_boxes', 'move_jav_taxonomy_meta_boxes');
-
-?>
