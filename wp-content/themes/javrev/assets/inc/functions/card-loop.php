@@ -4,7 +4,7 @@ function get_card_loop($args = [], $class = '', $wrap_class = '')
 {
   $defaults = [
     'post_type'      => 'jav',
-    'posts_per_page' => 12,
+    'posts_per_page' => 3,
     'orderby'        => 'date',
     'order'          => 'DESC',
     'paged'          => get_query_var('paged', 1)

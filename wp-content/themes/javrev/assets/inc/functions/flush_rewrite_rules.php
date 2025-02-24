@@ -5,5 +5,3 @@
 add_action('init', function() {
   flush_rewrite_rules();
 });
-
-?>
