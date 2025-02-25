@@ -40,19 +40,22 @@
       <div class="ttl__layout">
         <h2 class="ttl">ALL Reviews</h2>
         <p class="text">日本動画を真面目にレビューしました。</p>
+        <p class="text">
+
+        </p>
       </div>
       <?php get_template_part('assets/inc/parts/btn__query'); ?>
       <?php
       get_card_loop([
         'post_type'      => 'jav',
-        'posts_per_page' => 4,
+        'posts_per_page' => 9,
         'orderby'        => 'date',
         'order'          => 'DESC',
       ]);
       ?>
     </div>
   </section>
-  <?php get_template_part('assets/inc/parts/list__pagination'); ?>
+  <?php // get_template_part('assets/inc/parts/list__pagination'); ?>
 </main>
 <aside class="sidebar__layout">
   <?php get_template_part('assets/inc/parts/popular-tags'); ?>
