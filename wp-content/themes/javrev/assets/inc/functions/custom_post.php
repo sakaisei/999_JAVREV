@@ -77,7 +77,7 @@ function register_custom_taxonomies()
       'show_admin_column' => true, // 管理画面のカラムに追加
       'show_in_rest' => true,
       'has_archive'  => true,
-      'rewrite'      => array('slug' => "jav/$slug", 'with_front' => false),
+      'rewrite'      => array('slug' => "$slug", 'with_front' => false),
     ));
   }
 }
@@ -94,7 +94,7 @@ function add_custom_query_vars($vars)
 add_filter('query_vars', 'add_custom_query_vars');
 
 /////////////////////////////////////////////////////////
-// ページネーション用のリライトルールを追加
+// カスタム投稿用リライトルールを追加
 /////////////////////////////////////////////////////////
 function custom_rewrite_rules()
 {
@@ -124,38 +124,21 @@ function add_custom_taxonomy_rewrite_rules()
   );
 
   foreach ($taxonomies as $taxonomy) {
-    add_rewrite_rule("jav/{$taxonomy}/?$", "index.php?post_type=jav&taxonomy={$taxonomy}", 'top');
-    add_rewrite_rule("jav/{$taxonomy}/([^/]+)/?$", "index.php?{$taxonomy}=\$matches[1]", 'top');
-    add_rewrite_rule("jav/{$taxonomy}/([^/]+)/page/([^/]+)/?$", "index.php?{$taxonomy}=\$matches[1]&paged=\$matches[2]", 'top');
+    add_rewrite_rule("^{$taxonomy}/?$", "index.php?taxonomy={$taxonomy}&post_type=jav", 'top');
+    add_rewrite_rule("^{$taxonomy}/([^/]+)/?$", "index.php?taxonomy={$taxonomy}&term=\$matches[1]&post_type=jav", 'top');
+    add_rewrite_rule("^{$taxonomy}/([^/]+)/page/([0-9]+)/?$", "index.php?taxonomy={$taxonomy}&term=\$matches[1]&paged=\$matches[2]&post_type=jav", 'top');
   }
 }
 add_action('init', 'add_custom_taxonomy_rewrite_rules');
 
 /////////////////////////////////////////////////////////
-// `pre_get_posts` で `paged` を確実に適用
+// `pre_get_posts` で `paged` を適用
 /////////////////////////////////////////////////////////
 add_action('pre_get_posts', function ($query) {
   if (!is_admin() && $query->is_main_query()) {
 
-    // `jav` のカスタムタクソノミー一覧
-    $jav_taxonomies = [
-      'censor',
-      'format',
-      'playtime',
-      'cast',
-      'value',
-      'genre',
-      'outfit',
-      'girl',
-      'guy',
-      'body',
-      'rel',
-      'scene',
-      'play'
-    ];
-
-    // すべての `jav` に関連するタクソノミーを適用
-    if (is_post_type_archive('jav') || is_tax($jav_taxonomies)) {
+    // `jav` の投稿タイプアーカイブ
+    if ($query->is_post_type_archive('jav')) {
       $paged = max(1, (int) get_query_var('paged', 1));
 
       $query->set('post_type', 'jav');
@@ -164,53 +147,22 @@ add_action('pre_get_posts', function ($query) {
       $query->set('orderby', 'date');
       $query->set('order', 'DESC');
 
-      // デバッグログ出力
-      //error_log("【DEBUG】pre_get_posts: `paged` を適用 → " . $paged);
-      //error_log("【DEBUG】対象のタクソノミー → " . get_queried_object()->taxonomy);
+      // デバッグログ
+      //error_log("【DEBUG】投稿タイプアーカイブ: JAV");
+    }
+
+    // `jav` に関連するカスタムタクソノミーのアーカイブ
+    elseif ($query->is_tax()) {
+      $paged = max(1, (int) get_query_var('paged', 1));
+
+      $query->set('posts_per_page', 2);
+      $query->set('paged', $paged);
+      $query->set('orderby', 'date');
+      $query->set('order', 'DESC');
+
+      // デバッグログ
+      //error_log("【DEBUG】タクソノミーアーカイブ: " . get_queried_object()->taxonomy);
     }
   }
 });
-
-
-
-/////////////////////////////////////////////////////////
-// `rewrite_rules` のフラッシュ (テーマ変更時のみ)
-/////////////////////////////////////////////////////////
-// function custom_flush_rewrite_rules()
-// {
-//   flush_rewrite_rules();
-// }
-// add_action('after_switch_theme', 'custom_flush_rewrite_rules');
-
-// // 一時的なデバッグ用（確認後に削除）
-// add_action('init', 'custom_flush_rewrite_rules');
-
-/////////////////////////////////////////////////////////
-// `is_post_type_archive('jav')` のデバッグログ出力
-/////////////////////////////////////////////////////////
-// add_action('template_redirect', function () {
-//   if (is_post_type_archive('jav')) {
-//     //error_log("【DEBUG】is_post_type_archive('jav') は TRUE");
-//   } else {
-//     //error_log("【DEBUG】is_post_type_archive('jav') は FALSE");
-//   }
-// });
-
-/////////////////////////////////////////////////////////
-// `wp_rewrite_rules` のデバッグ出力
-/////////////////////////////////////////////////////////
-// add_action('init', function () {
-//   global $wp_rewrite;
-//   //error_log(print_r($wp_rewrite->wp_rewrite_rules(), true));
-// });
-
-/////////////////////////////////////////////////////////
-// 一度だけ `flush_rewrite_rules()` を実行
-/////////////////////////////////////////////////////////
-// add_action('init', function () {
-//   if (get_option('my_custom_rewrite_flush') !== '1') {
-//     flush_rewrite_rules();
-//     update_option('my_custom_rewrite_flush', '1');
-//   }
-// });
 
