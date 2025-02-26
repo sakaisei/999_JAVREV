@@ -33,6 +33,60 @@ global $wp_query;
         echo '</h1>';
         ?>
         <p class="text">各descriptionが挿入されます。</p>
+        <p class="text"><?php
+                        global $wp_query;
+                        echo '<pre style="font-size:13px">';
+                        //echo 'Template: archive.php' . PHP_EOL;
+                        echo 'is_archive: ' . (is_archive() ? 'true' : 'false') . PHP_EOL;
+                        echo 'is_tax: ' . (is_tax() ? 'true' : 'false') . PHP_EOL;
+                        echo 'is_category: ' . (is_category() ? 'true' : 'false') . PHP_EOL;
+                        echo 'is_tag: ' . (is_tag() ? 'true' : 'false') . PHP_EOL;
+                        echo 'is_post_type_archive: ' . (is_post_type_archive() ? 'true' : 'false') . PHP_EOL;
+                        echo 'Query Vars: ';
+                        print_r($wp_query->query_vars);
+                        echo '</pre>';
+                        ?>
+        </p>
+        <p><?php
+            // デバッグログへ書き込み
+            // error_log("=== DEBUG: /jav/play/ ===");
+
+            // // 現在のクエリ情報を取得
+            // global $wp_query;
+            // error_log("Query Vars: " . print_r($wp_query->query_vars, true));
+
+            // // クエリオブジェクトを取得
+            // $queried_object = get_queried_object();
+            // error_log("Queried Object: " . print_r($queried_object, true));
+
+            // // カスタムタクソノミー情報を取得
+            // $taxonomy = isset($wp_query->query_vars['taxonomy']) ? $wp_query->query_vars['taxonomy'] : null;
+            // error_log("Taxonomy Slug: " . print_r($taxonomy, true));
+
+            // // ターム情報を取得（ある場合）
+            // $term_slug = isset($wp_query->query_vars['term']) ? $wp_query->query_vars['term'] : null;
+            // $term = !empty($term_slug) ? get_term_by('slug', $term_slug, $taxonomy) : null;
+            // error_log("Term Slug: " . print_r($term_slug, true));
+            // error_log("Term Object: " . print_r($term, true));
+
+            // // クエリがタクソノミーアーカイブかどうか
+            // $is_tax = is_tax();
+            // error_log("Is Taxonomy Archive: " . ($is_tax ? "true" : "false"));
+
+            // // もし `$term` が null の場合の追加デバッグ
+            // if (!$term) {
+            //   error_log("⚠️ WARNING: `get_term_by` returned null. The taxonomy or term might not exist.");
+            // }
+
+            // // デバッグ終了
+            // error_log("=== DEBUG END ===");
+            ?>
+          <?php
+          // $queried_object = get_queried_object();
+          // error_log("✅ DEBUG: Final queried object");
+          // error_log(print_r($queried_object, true));
+          ?>
+        </p>
       </div>
       <?php get_template_part('assets/inc/parts/btn__query'); ?>
 

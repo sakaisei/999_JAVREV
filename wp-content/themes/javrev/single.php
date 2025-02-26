@@ -101,6 +101,19 @@ if (function_exists('yoast_breadcrumb')) {
         </div>
       <?php endif; ?>
       <section class="list__meta">
+        <?php
+        global $wp_query;
+        echo '<pre>';
+        echo 'Template: single.php' . PHP_EOL;
+        echo 'is_single: ' . (is_single() ? 'true' : 'false') . PHP_EOL;
+        echo 'is_singular: ' . (is_singular() ? 'true' : 'false') . PHP_EOL;
+        echo 'Post Type: ' . get_post_type() . PHP_EOL;
+        echo 'Query Vars: ';
+        print_r($wp_query->query_vars);
+        echo '</pre>';
+        ?>
+
+
         <div class="list__metabox list__metabox-overview">
           <div class="inner-layout">
             <h2 class="ttlmetasmall icon__normal before gray-light video mb0"><?php echo lang('article.meta-sec-ttl'); ?></h2>
