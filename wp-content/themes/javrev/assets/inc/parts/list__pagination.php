@@ -1,4 +1,15 @@
-<?php if ($total_pages > 1) : ?>
+<?php
+// 現在のページ番号を取得
+$paged = max(1, get_query_var('paged'));
+
+// クエリオブジェクトを取得（メインクエリまたはカスタムクエリ）
+global $wp_query;
+$total_pages = isset($wp_query->max_num_pages) ? $wp_query->max_num_pages : 1;
+
+// ページネーションのベースURLを設定
+$base_url = get_pagenum_link(1);
+
+if ($total_pages > 1) : ?>
   <nav class="list__pagination layout__sub" aria-label="ページナビゲーション">
     <div class="inner-layout layout__normal">
       <ul class="pages">
@@ -16,8 +27,8 @@
           'format'    => 'page/%#%/',
           'current'   => $paged,
           'total'     => $total_pages,
-          'mid_size'  => 2,  // 現在のページの前後に表示する数
-          'end_size'  => 1,  // 先頭と末尾に表示する数
+          'mid_size'  => 2,
+          'end_size'  => 1,
           'prev_next' => false,
           'type'      => 'array',
         ]);

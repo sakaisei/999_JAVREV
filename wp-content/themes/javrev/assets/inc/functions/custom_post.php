@@ -38,11 +38,11 @@ function register_custom_post_types()
 add_action('init', 'register_custom_post_types');
 
 /////////////////////////////////////////////////////////
-// タクソノミーの登録
+// カスタムタクソノミーのリストを取得
 /////////////////////////////////////////////////////////
-function register_custom_taxonomies()
+function get_custom_taxonomies()
 {
-  $taxonomies = array(
+  return array(
     'censor'   => '検閲・規制',
     'format'   => '映像形式',
     'playtime' => '再生時間',
@@ -57,6 +57,14 @@ function register_custom_taxonomies()
     'scene'    => 'シチュエーション',
     'play'     => 'プレイ内容'
   );
+}
+
+/////////////////////////////////////////////////////////
+// タクソノミーの登録
+/////////////////////////////////////////////////////////
+function register_custom_taxonomies()
+{
+  $taxonomies = get_custom_taxonomies();
 
   foreach ($taxonomies as $slug => $label) {
     register_taxonomy($slug, 'jav', array(
@@ -94,7 +102,7 @@ function add_custom_query_vars($vars)
 add_filter('query_vars', 'add_custom_query_vars');
 
 /////////////////////////////////////////////////////////
-// カスタム投稿用リライトルールを追加
+// カスタム投稿タイプ用リライトルールを追加
 /////////////////////////////////////////////////////////
 function custom_rewrite_rules()
 {
@@ -105,23 +113,10 @@ add_action('init', 'custom_rewrite_rules');
 /////////////////////////////////////////////////////////
 // タクソノミーのURLリライトルールを追加
 /////////////////////////////////////////////////////////
+// [A] まずはタクソノミーのリライトルール
 function add_custom_taxonomy_rewrite_rules()
 {
-  $taxonomies = array(
-    'censor',
-    'format',
-    'playtime',
-    'cast',
-    'value',
-    'genre',
-    'outfit',
-    'girl',
-    'guy',
-    'body',
-    'rel',
-    'scene',
-    'play'
-  );
+  $taxonomies = array_keys(get_custom_taxonomies());
 
   foreach ($taxonomies as $taxonomy) {
     add_rewrite_rule("^{$taxonomy}/?$", "index.php?taxonomy={$taxonomy}&post_type=jav", 'top');
@@ -130,6 +125,56 @@ function add_custom_taxonomy_rewrite_rules()
   }
 }
 add_action('init', 'add_custom_taxonomy_rewrite_rules');
+
+// [B] タクソノミーアーカイブとして認識させる
+// function fix_taxonomy_root_query($query)
+// {
+//   if ($query->is_main_query() && !is_admin()) {
+//     $taxonomies = array_keys(get_custom_taxonomies());
+
+//     // すべてのタクソノミーを対象に `is_tax()` を適用
+//     foreach ($taxonomies as $taxonomy) {
+//       if (get_query_var('taxonomy') == $taxonomy) {
+//         $query->is_tax = true;
+//         $query->set('post_type', ''); // カスタム投稿アーカイブとして扱わないようにする
+//       }
+//     }
+//   }
+// }
+// add_action('pre_get_posts', 'fix_taxonomy_root_query');
+
+// function fix_taxonomy_root_query($query)
+// {
+//   if ($query->is_main_query() && !is_admin()) {
+//     $taxonomies = array_keys(get_custom_taxonomies());
+
+//     foreach ($taxonomies as $taxonomy) {
+//       if (get_query_var('taxonomy') == $taxonomy) {
+//         //error_log("✅ DEBUG: Fixing taxonomy root query for `$taxonomy`");
+
+//         // タクソノミーアーカイブとして正しく認識させる
+//         $query->is_tax = true;
+//         $query->is_post_type_archive = false; // 投稿アーカイブの誤認識を防ぐ
+
+//         // `post_type` をクリアするのをやめる
+//         // $query->set('post_type', ''); // コメントアウト
+//       }
+//     }
+//   }
+// }
+
+// [C] AとBだけだと、ポストタイプのアーカイブとしても認識してるから、それをfalseにする
+// function fix_post_type_archive_flag($query)
+// {
+//   if ($query->is_main_query() && !is_admin() && is_tax()) {
+//     $query->is_post_type_archive = false;
+//   }
+// }
+// add_action('pre_get_posts', 'fix_post_type_archive_flag');
+
+
+
+
 
 /////////////////////////////////////////////////////////
 // `pre_get_posts` で `paged` を適用
