@@ -85,7 +85,7 @@ function register_custom_taxonomies()
       'show_admin_column' => true, // 管理画面のカラムに追加
       'show_in_rest' => true,
       'has_archive'  => true,
-      'rewrite'      => array('slug' => "$slug", 'with_front' => false),
+      'rewrite'      => array('slug' => "jav/$slug", 'with_front' => false),
     ));
   }
 }
@@ -119,9 +119,9 @@ function add_custom_taxonomy_rewrite_rules()
   $taxonomies = array_keys(get_custom_taxonomies());
 
   foreach ($taxonomies as $taxonomy) {
-    add_rewrite_rule("^{$taxonomy}/?$", "index.php?taxonomy={$taxonomy}&post_type=jav", 'top');
-    add_rewrite_rule("^{$taxonomy}/([^/]+)/?$", "index.php?taxonomy={$taxonomy}&term=\$matches[1]&post_type=jav", 'top');
-    add_rewrite_rule("^{$taxonomy}/([^/]+)/page/([0-9]+)/?$", "index.php?taxonomy={$taxonomy}&term=\$matches[1]&paged=\$matches[2]&post_type=jav", 'top');
+    add_rewrite_rule("jav/{$taxonomy}/?$", "index.php?post_type=jav&taxonomy={$taxonomy}", 'top');
+    add_rewrite_rule("jav/{$taxonomy}/([^/]+)/?$", "index.php?{$taxonomy}=\$matches[1]", 'top');
+    add_rewrite_rule("jav/{$taxonomy}/([^/]+)/page/([^/]+)/?$", "index.php?{$taxonomy}=\$matches[1]&paged=\$matches[2]", 'top');
   }
 }
 add_action('init', 'add_custom_taxonomy_rewrite_rules');
