@@ -16,6 +16,7 @@ $function_files = [
   //'yoast-seo-old.php', // Yoast SEO 設定
   //'wpml-error.php', // WPML エラー回避設定
   'yoast-seo.php', // Yoast SEO 設定
+  'hreflang.php', // hreflangの設定
   'affiliate_info.php', // アフィリエイト情報
   'flush_rewrite_rules.php' // 最後にリライトルールをフラッシュ
 ];

@@ -28,5 +28,3 @@ function lang($key) {
 // 実装時にコメントアウト
 apcu_delete("translations_en"); // 英語のキャッシュ削除
 apcu_delete("translations_ja"); // 日本語のキャッシュ削除
-
-?>
