@@ -36,7 +36,7 @@ function my_theme_enqueue_assets() {
   wp_enqueue_script(
     'common-js',
     get_template_directory_uri() . '/assets/js/common.js',
-    array('jquery-cdn', 'swiper'),
+    array('swiper'),
     '1.0.0',
     true
   );

@@ -1,6 +1,6 @@
 <?php
 
-//　ページネーションのページにhreflangを設定
+//　ポストタイプのArchiveページにhreflangを設定
 add_action('template_redirect', function () {
   global $wp_query;
 

@@ -111,10 +111,10 @@ global $wp_query;
             ]
           ];
           $base_url = untrailingslashit(get_term_link($wp_query->query_vars['term'], $taxonomy));
+          echo 'えええええ';
         } else {
           // `/jav/タクソノミー/` の場合
           echo '何かしらのテンプレートや関数化した何かを読み込むようにする';
-          return;
         }
       } elseif (is_post_type_archive('jav')) {
         // `/jav/` の場合
@@ -126,16 +126,16 @@ global $wp_query;
         $base_url = untrailingslashit(get_pagenum_link(1));
       } else {
         // その他のケース
-        return;
+        echo 'あーあ';
       }
 
       // `get_card_loop()` を実行
-      get_card_loop($query_args);
+      //get_card_loop($query_args);
 
       // WP_Query の max_num_pages を取得
-      $custom_query = new WP_Query($query_args);
-      $total_pages = (isset($custom_query) && $custom_query->max_num_pages) ? intval($custom_query->max_num_pages) : 1;
-      wp_reset_postdata();
+      // $custom_query = new WP_Query($query_args);
+      // $total_pages = (isset($custom_query) && $custom_query->max_num_pages) ? intval($custom_query->max_num_pages) : 1;
+      // wp_reset_postdata();
       ?>
     </div>
   </section>

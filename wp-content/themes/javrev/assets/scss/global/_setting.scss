@@ -1,3 +1,6 @@
+// 00. sassのmap
+@use "sass:map";
+
 // 01. Font
 //=====================================================
 @mixin sans {
@@ -50,7 +53,7 @@ $color: (
 
 // Color Map
 @function colors($key) {
-  @return map-get($color, $key);
+  @return map.get($color, $key);
 }
 
 // グラデーション
@@ -129,10 +132,11 @@ $device_width: (
 );
 // Device Width Map
 @function device($key) {
-  @return map-get($device_width, $key);
+  @return map.get($device_width, $key);
 }
 @mixin media($size: tablet) {
-  @media (min-width: device($size)) {
+  $width: device($size); // 関数の値を変数に格納
+  @media (min-width: $width) {
     @content;
   }
 }

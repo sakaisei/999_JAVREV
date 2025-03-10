@@ -1,6 +1,8 @@
 {
   "###===============Common共通設定===============###": "",
   "common.logo": "EN",
+  "common.switcher-btn--aria": "言語メニューを開く",
+  "common.switcher-list--aria": "言語スイッチャー",
 
 
   "###===============Articleページ===============###": "",

@@ -105,16 +105,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // lang-menu
 //=====================================================
-document.querySelector('.acmenu').addEventListener('click', function () {
-  const menu = document.querySelector('.lang-menu');
-  
-  // ボタンとメニューにis--openクラスを切り替え
-  this.classList.toggle('is--open');
-  menu.classList.toggle('is--open');
-  
-  // aria-expanded属性を更新
-  this.setAttribute('aria-expanded', menu.classList.contains('is--open') ? 'true' : 'false');
+document.addEventListener('DOMContentLoaded', function () {
+  const langButton = document.querySelector('.acmenu');
+  const langMenu = document.querySelector('.lang-menu');
+
+  if (!langButton || !langMenu) {
+    console.warn('言語スイッチャーの要素が見つかりません');
+    return;
+  }
+
+  langButton.addEventListener('click', function () {
+    console.log('言語メニュークリックイベント発火');
+
+    this.classList.toggle('is--open');
+    langMenu.classList.toggle('is--open');
+
+    this.setAttribute('aria-expanded', langMenu.classList.contains('is--open') ? 'true' : 'false');
+  });
 });
+
+
 
 // gnav__search
 //=====================================================
