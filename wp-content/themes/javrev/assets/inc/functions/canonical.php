@@ -1,29 +1,31 @@
 <?php
 
-// Yoast SEO の canonical URL を修正
-add_filter('wpseo_canonical', function($canonical) {
-  global $wp, $wp_query;
+// タクソノミーページの canonical URL を修正
+add_action('template_redirect', function () {
+  global $wp_query;
 
-  // 現在のページ情報を取得
-  $current_url = home_url(add_query_arg([], $wp->request));
-  $paged = get_query_var('paged') ? get_query_var('paged') : 1;
+  // `jav` のすべてのカスタムタクソノミーを取得（共通関数を利用）
+  $taxonomies = get_all_taxonomies('jav');
 
-  // タクソノミーページかどうかを判定
-  $is_tax_page = isset($wp_query->query_vars['taxonomy']) && !empty($wp_query->query_vars['taxonomy']);
+  // `playtime` や `format` などのタクソノミートップページ（英語・多言語どちらも対象）
+  if (
+    isset($wp_query->query_vars['taxonomy']) &&
+    in_array($wp_query->query_vars['taxonomy'], $taxonomies, true) &&
+    empty($wp_query->query_vars['term']) // タクソノミーのトップページのみ対象
+  ) {
+    ob_start(function ($buffer) use ($wp_query) {
+      $taxonomy_slug = $wp_query->query_vars['taxonomy']; // 例: playtime, format など
+      $corrected_url = home_url("/jav/{$taxonomy_slug}/");
 
-  // `page/X/` がすでに含まれている場合は削除し、ベースURLを確定
-  $canonical = preg_replace('/\/page\/\d+\/?$/', '', $current_url);
-
-  // 🔹 タクソノミーアーカイブの canonical を修正
-  if ($is_tax_page) {
-    $taxonomy_slug = $wp_query->query_vars['taxonomy'];
-    $canonical = home_url("/jav/{$taxonomy_slug}/");
+      // `<link rel="canonical" href="...">` を修正
+      $buffer = preg_replace_callback(
+        '/<link rel="canonical"[^>]+href="([^"]+)"/i',
+        function ($matches) use ($corrected_url) {
+          return str_replace($matches[1], esc_url($corrected_url), $matches[0]);
+        },
+        $buffer
+      );
+      return $buffer;
+    });
   }
-
-  // 🔹 ページネーション対応 (`page/X/` を追加)
-  if ($paged > 1) {
-    $canonical = trailingslashit($canonical) . "page/{$paged}/";
-  }
-
-  return esc_url($canonical);
 });

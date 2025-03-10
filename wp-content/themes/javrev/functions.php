@@ -22,7 +22,7 @@ $function_files = [
   'hreflang.php', // WPMLのhreflangの設定
   'canonical.php', // YoastSEOのcanonicalの設定
   'nextprev-yoast.php', // YoastSEOのページネーションの next/prev 設定
-  'ogp.php', // YoastSEOのOGP のURL設定
+  'og-url.php', // YoastSEOのOGP のURL設定
   'lang-switcher.php', // WPMLの言語スイッチャーの設定
   'affiliate_info.php', // アフィリエイト情報
   'flush_rewrite_rules.php' // 最後にリライトルールをフラッシュ
