@@ -111,7 +111,6 @@ global $wp_query;
             ]
           ];
           $base_url = untrailingslashit(get_term_link($wp_query->query_vars['term'], $taxonomy));
-          echo 'えええええ';
         } else {
           // `/jav/タクソノミー/` の場合
           echo '何かしらのテンプレートや関数化した何かを読み込むようにする';
@@ -126,11 +125,10 @@ global $wp_query;
         $base_url = untrailingslashit(get_pagenum_link(1));
       } else {
         // その他のケース
-        echo 'あーあ';
       }
 
       // `get_card_loop()` を実行
-      //get_card_loop($query_args);
+      get_card_loop($query_args);
 
       // WP_Query の max_num_pages を取得
       // $custom_query = new WP_Query($query_args);
