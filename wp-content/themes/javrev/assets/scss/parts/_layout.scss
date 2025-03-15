@@ -53,6 +53,15 @@
   }
 }
 
+// .layout__marginbottom
+//=====================================================
+.layout__marginbottom {
+  margin-bottom: clamp(78px*0.5, 78/750*100vw, 7.8rem*0.5);
+  @include media(pc) {
+    margin-bottom: 8.6rem;
+  }
+}
+
 // .layout__sub
 //=====================================================
 .layout__sub {

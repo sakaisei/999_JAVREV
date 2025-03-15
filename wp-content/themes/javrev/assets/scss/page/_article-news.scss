@@ -1,0 +1,31 @@
+@use "../global/_setting" as *;
+
+// .single-news
+//=====================================================
+.single-news {
+  .article__header {
+    padding: clamp(110px*0.5, 110/750*100vw, 11rem*0.5) 0;
+    @include media(tb) {
+      padding: clamp(110px*0.8, 110/750*100vw, 11rem*0.8) 0;
+    }
+    @include media(pc) {
+      padding: 9rem 0;
+    }
+    .ttl__article {
+      margin-bottom: 0;
+    }
+  }
+  .article__the_contents {
+    .inner-layout {
+      padding-top: 0;
+    }
+    // h2,h3,h4,h5,h6 {
+    //   color: colors(gray);
+    // }
+    // p,li {
+    //   color: colors(gray);
+    // }
+  }
+}
+
+

@@ -7,9 +7,9 @@
   --rate: #EDBF00;
   --good: #63BC63;
   --bad: #D07464;
-  --white: #F6F6F6;
+  --white: #F1F1F1;
   --white-fff: #FFF;
-  --black: #000;
+  --black: #050505;
   --black-light: #141414;
   --black-light-2: #1D1D1D;
   --gray: #818181;
@@ -559,6 +559,15 @@ pre {
   }
 }
 
+.layout__marginbottom {
+  margin-bottom: clamp(39px, 10.4vw, 3.9rem);
+}
+@media (min-width: 1024px) {
+  .layout__marginbottom {
+    margin-bottom: 8.6rem;
+  }
+}
+
 .layout__sub {
   display: block;
   width: 100%;
@@ -994,7 +1003,7 @@ pre {
   }
 }
 .list__metabox .ttl-localization .ttl-localized {
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.5;
   display: inline-flex;
   cursor: pointer;
@@ -1496,12 +1505,16 @@ pre {
 .ttl__article .ttlblock .ttl {
   font-size: clamp(19px, 4.5333333333vw, 2.85rem);
   line-height: 1.7;
-  font-weight: 700;
+  font-weight: 400;
 }
 @media (min-width: 1024px) {
   .ttl__article .ttlblock .ttl {
-    font-size: 2.8rem;
+    font-size: 3.6rem;
   }
+}
+.ttl__article .ttlblock .ttl.border-bottom {
+  border-bottom: solid 1px var(--gray-dark);
+  padding-bottom: 0.75em;
 }
 .ttl__article .ttlblock .lead {
   font-size: clamp(13px, 3.2vw, 1.56rem);
@@ -3758,31 +3771,34 @@ button.wp_ulike_btn:disabled:active, .wpulike-default button.wp_ulike_btn:disabl
   line-height: 1.65;
   margin-bottom: 0.5em;
   margin-top: 3.6em;
+  font-weight: 400;
 }
 @media (min-width: 1024px) {
   .article__the_contents h2 {
-    font-size: 2.6rem;
+    font-size: 3rem;
   }
 }
-.article__the_contents h2:first-of-type {
+.article__the_contents h2:first-child {
   margin-top: 0;
 }
 .article__the_contents h3 {
   font-size: clamp(15px, 3.7333333333vw, 1.8rem);
   line-height: 1.65;
+  font-weight: 400;
 }
 @media (min-width: 1024px) {
   .article__the_contents h3 {
-    font-size: 2.4rem;
+    font-size: 2.2rem;
   }
 }
 .article__the_contents h4 {
   font-size: clamp(13px, 3.2vw, 1.56rem);
   line-height: 1.65;
+  font-weight: 400;
 }
 @media (min-width: 1024px) {
   .article__the_contents h4 {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }
 .article__the_contents p {
@@ -3793,6 +3809,7 @@ button.wp_ulike_btn:disabled:active, .wpulike-default button.wp_ulike_btn:disabl
 @media (min-width: 1024px) {
   .article__the_contents p {
     font-size: 1.8rem;
+    margin-bottom: 2.8em;
   }
 }
 .article__the_contents .img {
@@ -3917,6 +3934,26 @@ button.wp_ulike_btn:disabled:active, .wpulike-default button.wp_ulike_btn:disabl
 }
 .article__footer {
   background: var(--black-light);
+}
+
+.single-news .article__header {
+  padding: clamp(55px, 14.6666666667vw, 5.5rem) 0;
+}
+@media (min-width: 667px) {
+  .single-news .article__header {
+    padding: clamp(88px, 14.6666666667vw, 8.8rem) 0;
+  }
+}
+@media (min-width: 1024px) {
+  .single-news .article__header {
+    padding: 9rem 0;
+  }
+}
+.single-news .article__header .ttl__article {
+  margin-bottom: 0;
+}
+.single-news .article__the_contents .inner-layout {
+  padding-top: 0;
 }
 
 /*# sourceMappingURL=style.css.map */

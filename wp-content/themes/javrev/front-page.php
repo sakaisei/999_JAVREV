@@ -41,17 +41,17 @@
         <h2 class="ttl">ALL Reviews</h2>
         <p class="text">日本動画を真面目にレビューしました。</p>
         <?php
-        global $wp_query;
-        echo '<pre style="font-size:13px">';
-        //echo 'Template: archive.php' . PHP_EOL;
-        echo 'is_archive: ' . (is_archive() ? 'true' : 'false') . PHP_EOL;
-        echo 'is_tax: ' . (is_tax() ? 'true' : 'false') . PHP_EOL;
-        echo 'is_category: ' . (is_category() ? 'true' : 'false') . PHP_EOL;
-        echo 'is_tag: ' . (is_tag() ? 'true' : 'false') . PHP_EOL;
-        echo 'is_post_type_archive: ' . (is_post_type_archive() ? 'true' : 'false') . PHP_EOL;
-        echo 'Query Vars: ';
-        print_r($wp_query->query_vars);
-        echo '</pre>';
+        // global $wp_query;
+        // echo '<pre style="font-size:13px">';
+        // //echo 'Template: archive.php' . PHP_EOL;
+        // echo 'is_archive: ' . (is_archive() ? 'true' : 'false') . PHP_EOL;
+        // echo 'is_tax: ' . (is_tax() ? 'true' : 'false') . PHP_EOL;
+        // echo 'is_category: ' . (is_category() ? 'true' : 'false') . PHP_EOL;
+        // echo 'is_tag: ' . (is_tag() ? 'true' : 'false') . PHP_EOL;
+        // echo 'is_post_type_archive: ' . (is_post_type_archive() ? 'true' : 'false') . PHP_EOL;
+        // echo 'Query Vars: ';
+        // print_r($wp_query->query_vars);
+        // echo '</pre>';
         ?>
       </div>
       <?php get_template_part('assets/inc/parts/btn__query'); ?>
